@@ -72,7 +72,12 @@ run_ml <-
       ntree,
       seed
     )
+
     if (!is.na(seed)) {
+      if (exists(".Random.seed")) {
+        saved_seed <- .Random.seed
+        on.exit(.Random.seed <<- saved_seed)
+      }
       set.seed(seed)
     }
 
