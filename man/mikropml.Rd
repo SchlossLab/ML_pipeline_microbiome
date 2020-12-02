@@ -27,7 +27,7 @@ running machine learning, and \code{run_ml()} to run machine learning.
 \itemize{
 \item \href{http://www.schlosslab.org/mikropml/articles/introduction.html}{Introduction}
 \item \href{http://www.schlosslab.org/mikropml/articles/preprocess.html}{Preprocessing data}
-\item \href{http://www.schlosslab.org/mikropml/articles/tuning.html}{Hyperparamter tuning}
+\item \href{http://www.schlosslab.org/mikropml/articles/tuning.html}{Hyperparameter tuning}
 \item \href{http://www.schlosslab.org/mikropml/articles/parallel.html}{Parallel processing}
 \item \href{http://www.schlosslab.org/mikropml/articles/paper.html}{The mikropml paper}
 }

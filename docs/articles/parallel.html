@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
 <li class="divider">
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Vignettes</li>
@@ -65,6 +65,9 @@
     </li>
     <li>
       <a href="../articles/preprocess.html">Preprocessing data</a>
+    </li>
+    <li>
+      <a href="../articles/tuning.html">Hyperparameter tuning</a>
     </li>
     <li>
       <a href="../articles/parallel.html">Parallel processing</a>
@@ -92,7 +95,7 @@
 
       
 
-      </header><link href="parallel_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+      </header><script src="parallel_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="parallel_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="parallel_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -107,8 +110,8 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.schlosslab.org/mikropml/">mikropml</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.schlosslab.org/mikropml/">mikropml</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'dplyr'</span>
@@ -117,40 +120,40 @@
 <span class="co">#&gt;     filter, lag</span>
 <span class="co">#&gt; The following objects are masked from 'package:base':</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span></pre></div>
+<span class="co">#&gt;     intersect, setdiff, setequal, union</span></code></pre></div>
 <div id="speed-up-single-runs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#speed-up-single-runs" class="anchor"></a>Speed up single runs</h2>
 <p>By default, <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> and <code><a href="../reference/run_ml.html">run_ml()</a></code> use only one process in series. If you’d like to parallelize various steps of the pipeline to make them run faster, install <code>foreach</code>, <code>future</code>, <code>future.apply</code>, and <code>doFuture</code>. Then, register a future plan prior to calling <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> and <code><a href="../reference/run_ml.html">run_ml()</a></code>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu">doFuture</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doFuture/man/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/future/man/multicore.html">multicore</a></span>, workers <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">doFuture</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/doFuture/man/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/future/man/multicore.html">multicore</a></span>, workers <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <p>Above, we used the <code>multicore</code> plan to split the work across 2 cores. See the <a href="https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html"><code>future</code> documentation</a> for more about picking the best plan for your use case. Notably, <code>multicore</code> does not work inside RStudio or on Windows; you will need to use <code>multisession</code> instead in those cases.</p>
 <p>After registering a future plan, you can call <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> and <code><a href="../reference/run_ml.html">run_ml()</a></code> as usual, and they will run certain tasks in parallel.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">otu_data_preproc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>, <span class="st">'dx'</span><span class="op">)</span><span class="op">$</span><span class="va">dat_transformed</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">otu_data_preproc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>, <span class="st">'dx'</span><span class="op">)</span><span class="op">$</span><span class="va">dat_transformed</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
 <span class="va">result1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_data_preproc</span>, <span class="st">'glmnet'</span><span class="op">)</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
 <span class="co">#&gt; Loading required package: lattice</span>
-<span class="co">#&gt; Loading required package: ggplot2</span></pre></div>
+<span class="co">#&gt; Loading required package: ggplot2</span></code></pre></div>
 </div>
 <div id="call-run_ml-multiple-times-in-parallel-in-r" class="section level2">
 <h2 class="hasAnchor">
 <a href="#call-run_ml-multiple-times-in-parallel-in-r" class="anchor"></a>Call <code>run_ml()</code> multiple times in parallel in R</h2>
 <p>You can use functions from the <code>future.apply</code> package to call <code><a href="../reference/run_ml.html">run_ml()</a></code> multiple times in parallel with different parameters. You will first need to run <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> as above if you haven’t already. Then, call <code><a href="../reference/run_ml.html">run_ml()</a></code> with multiple seeds using <code>future_lapply()</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># NOTE: use more seeds for real-world data</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># NOTE: use more seeds for real-world data</span>
 <span class="va">results_multi</span> <span class="op">&lt;-</span> <span class="fu">future.apply</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">102</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">seed</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_data_preproc</span>, <span class="st">'glmnet'</span>, seed <span class="op">=</span> <span class="va">seed</span><span class="op">)</span>
   <span class="op">}</span>, future.seed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
-<span class="co">#&gt; Using 'dx' as the outcome column.</span></pre></div>
+<span class="co">#&gt; Using 'dx' as the outcome column.</span></code></pre></div>
 <p>Each call to <code><a href="../reference/run_ml.html">run_ml()</a></code> with a different seed uses a different random split of the data into training and testing sets. Since we are using seeds, we must set <code>future.seed</code> to <code>TRUE</code> (see the <a href="https://cran.r-project.org/web/packages/future.apply/future.apply.pdf"><code>future.apply</code> documentation</a> and <a href="https://www.r-bloggers.com/2020/09/future-1-19-1-making-sure-proper-random-numbers-are-produced-in-parallel-processing/">this blog post</a> for details on parallel-safe random seeds). This example uses only a few seeds for speed and simplicity, but for real data we recommend using many more seeds to get a better estimate of model performance.</p>
 <p>Extract the performance results and combine into one dataframe for all seeds:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">perf_df</span> <span class="op">&lt;-</span> <span class="fu">future.apply</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_lapply</a></span><span class="op">(</span><span class="va">results_multi</span>, 
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">perf_df</span> <span class="op">&lt;-</span> <span class="fu">future.apply</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_lapply</a></span><span class="op">(</span><span class="va">results_multi</span>, 
                                        <span class="kw">function</span><span class="op">(</span><span class="va">result</span><span class="op">)</span> <span class="op">{</span>
                                          <span class="va">result</span><span class="op">[[</span><span class="st">'performance'</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span> 
                                            <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">cv_metric_AUC</span>, <span class="va">AUC</span>, <span class="va">method</span><span class="op">)</span>
@@ -163,13 +166,13 @@
 <span class="co">#&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; </span>
 <span class="co">#&gt; 1         0.630 0.634 glmnet</span>
 <span class="co">#&gt; 2         0.591 0.608 glmnet</span>
-<span class="co">#&gt; 3         0.671 0.471 glmnet</span></pre></div>
+<span class="co">#&gt; 3         0.671 0.471 glmnet</span></code></pre></div>
 <div id="multiple-ml-methods" class="section level3">
 <h3 class="hasAnchor">
 <a href="#multiple-ml-methods" class="anchor"></a>Multiple ML methods</h3>
 <p>You may also wish to compare performance for different ML methods. <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code> can iterate over multiple lists or vectors, and <code>future_mapply()</code> works the same way:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co"># NOTE: use more seeds for real-world data</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># NOTE: use more seeds for real-world data</span>
 <span class="va">param_grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span>seeds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">102</span><span class="op">)</span>,
                           methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'glmnet'</span>, <span class="st">'rf'</span><span class="op">)</span><span class="op">)</span>
 <span class="va">results_mtx</span> <span class="op">&lt;-</span> <span class="fu">future.apply</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future.apply/man/future_mapply.html">future_mapply</a></span><span class="op">(</span>
@@ -185,10 +188,10 @@
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
-<span class="co">#&gt; Using 'dx' as the outcome column.</span></pre></div>
+<span class="co">#&gt; Using 'dx' as the outcome column.</span></code></pre></div>
 <p>Extract and combine the performance results for all seeds and methods:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">perf_df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">results_mtx</span><span class="op">[</span><span class="st">'performance'</span>,<span class="op">]</span>, 
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">perf_df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">results_mtx</span><span class="op">[</span><span class="st">'performance'</span>,<span class="op">]</span>, 
                    <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span> <span class="op">%&gt;%</span> 
                        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">cv_metric_AUC</span>, <span class="va">AUC</span>, <span class="va">method</span><span class="op">)</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="op">)</span>
@@ -201,18 +204,18 @@
 <span class="co">#&gt; 3         0.671 0.471 glmnet</span>
 <span class="co">#&gt; 4         0.665 0.708 rf    </span>
 <span class="co">#&gt; 5         0.651 0.697 rf    </span>
-<span class="co">#&gt; 6         0.701 0.592 rf</span></pre></div>
+<span class="co">#&gt; 6         0.701 0.592 rf</span></code></pre></div>
 <p>Visualize the performance results (<code>ggplot2</code> is required):</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">perf_boxplot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_model_performance.html">plot_model_performance</a></span><span class="op">(</span><span class="va">perf_df2</span><span class="op">)</span>
-<span class="va">perf_boxplot</span></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">perf_boxplot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_model_performance.html">plot_model_performance</a></span><span class="op">(</span><span class="va">perf_df2</span><span class="op">)</span>
+<span class="va">perf_boxplot</span></code></pre></div>
 <p><img src="parallel_files/figure-html/plot_perf-1.png" width="700"></p>
 <p><code><a href="../reference/plot_model_performance.html">plot_model_performance()</a></code> returns a ggplot2 object. You can add layers to customize the plot:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">perf_boxplot</span> <span class="op">+</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">perf_boxplot</span> <span class="op">+</span>
    <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
    <span class="fu">scale_color_brewer</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></pre></div>
+   <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="parallel_files/figure-html/customize_plot-1.png" width="700"></p>
 <p>You can also create your own plots however you like using the performance results.</p>
 </div>

@@ -17,10 +17,11 @@ knitr::opts_chunk$set(
 ```
 
 The goal of `mikropml` is to make supervised machine learning (ML) easy for you
-to run while not losing any of the rigor associated with robust machine learning pipelines.
-All you need to run ML is one function: `run_ml()`.
-We've selected sensible default arguments related to best practices [@topcuoglu_framework_2020, @tang_democratizing_2020],
-but we allow you to change those arguments to tailor `run_ml()` to the needs of your data.
+to run while implementing good practices for machine learning pipelines. All you
+need to run ML is one function: `run_ml()`. We've selected sensible default
+arguments related to good practices [@topcuoglu_framework_2020;
+@tang_democratizing_2020], but we allow you to change those arguments to tailor
+`run_ml()` to the needs of your data.
 
 This document takes you through all of the `run_ml()` inputs,
 both required and optional, as well as the outputs.
@@ -58,7 +59,7 @@ library(mikropml)
 head(otu_mini_bin)
 ```
 
-Here, `dx` is the outcome column (normal or cancer), and there are 3 features (`Otu00001` through `Otu00003`).
+Here, `dx` is the outcome column (normal or cancer), and there are 10 features (`Otu00001` through `Otu00010`).
 Because there are only 2 outcomes, we will be performing binary classification in the majority of the examples below.
 At the bottom, we will also briefly provide examples of multi-class and continuous outcomes.
 As you'll see, you run them in the same way as for binary classification!
@@ -82,7 +83,7 @@ The methods we have tested (and their backend packages) are:
 - Random forest (`"rf"`)
 - Decision tree (`"rpart2"`)
 - Support vector machine with a linear basis kernel (`"svmRadial"`)
-- xgBoost (`"xgbTree"`)
+- xgboost (`"xgbTree"`)
 
 For documentation on these methods, as well as many others, you can look at the
 [available models](https://topepo.github.io/caret/available-models.html)
@@ -91,39 +92,34 @@ While we have not vetted the other models used by `caret`, our function is gener
 While we can't promise that we can help with other models,
 feel free to [open an issue on GitHub](https://github.com/SchlossLab/mikropml/issues) if you have questions about other models and we _might_ be able to help.
 
-We will focus on `glmnet` which is our defualt implementation of L2-regularized logistic regression. here, then cover a few other examples towards the end.
+We will focus on `glmnet` which is our default implementation of L2-regularized logistic regression here, then cover a few other examples towards the end.
 
 # Before running ML
 
 Before you run ML, you should consider preprocessing your data,
 either on your own or with the `preprocess_data()` function.
 You can learn more about this in the preprocessing vignette: `vignette("preprocess")`.
-Running it with default options will center and scale the features of our dataset.
-
-```{r}
-preproc <- preprocess_data(dataset = otu_mini_bin,
-                           outcome_colname = 'dx')
-dat <- preproc$dat_transformed
-```
-
-We'll use `dat` for the following examples.
 
 # The simplest way to `run_ml()`
 
 As mentioned above, the minimal input is your dataset (`dataset`) and the machine learning model you want to use (`method`).
 
-We may also want to provide:
+You may also want to provide:
 
-- The outcome column name. By default it will pick the first column, but it's best practice to specify it explicitly.
+- The outcome column name. By default `run_ml()` will pick the first column, but it's best practice to specify the column name explicitly.
 - A seed so that the results will be reproducible, and so that you get the same results as those you see here (i.e have the same train/test split).
 
-Say we want to use `glmnet`.  Then, run ML with:
+Say we want to use `glmnet`.Then, run ML with:
 
-```{r}
-results <- run_ml(dat,
+```{r, eval = FALSE}
+results <- run_ml(otu_mini_bin,
                   'glmnet',
                   outcome_colname = 'dx',
                   seed = 2019)
+```
+```{r, echo = FALSE}
+# reduce vignette runtime by using precomputed results
+results <- otu_mini_bin_results_glmnet
 ```
 
 You'll notice a few things:
@@ -147,9 +143,10 @@ because you can learn more from the `caret::train()` documentation.
 names(results$trained_model)
 ```
 
-`test_data` is the data that was used for testing.
-In machine learning, it's always important to have a held-out test data that is not used in the training stage. In this pipeline we do that using `run_ml()` where we splitting your data in to training and testing.
-The training data is used to build the model (e.g. tune hyperparameters, learn the data) and the test data is used to evaluate how well the model performs.
+`test_data` is the partition of the dataset that was used for testing.
+In machine learning, it's always important to have a held-out test dataset that is not used in the training stage. 
+In this pipeline we do that using `run_ml()` where we split your data into training and testing sets.
+The training data are used to build the model (e.g. tune hyperparameters, learn the data) and the test data are used to evaluate how well the model performs.
 
 ```{r}
 head(results$test_data)
@@ -161,22 +158,25 @@ head(results$test_data)
 results$performance
 ```
 
-When using logistic regression for binary classification, area under the receiver-operator characteristic curve (AUC) is a useful meric to evaluate model performance.
-Because of that, it's the default that we use for `mikropml`. However, it is crucial to evaluate your model performance using multiple metrics.
+When using logistic regression for binary classification, area under the receiver-operator characteristic curve (AUC) is a useful metric to evaluate model performance.
+Because of that, it's the default that we use for `mikropml`. 
+However, it is crucial to evaluate your model performance using multiple metrics.
 Below you can find more information about other performance metrics and how to use them in our package.
 
-`cv_metric_AUC` is the AUC for the cross-validation folds for the training data.
-This gives us a sense of how good the model is on the training data.
+`cv_metric_AUC` is the AUC for the cross-valdaton folds for the training data.
+This gives us a sense of how well the model performs on the training data.
 
 Most of the other columns are performance metrics for the test data — the data that wasn't used to build the model.
 Here, you can see that the AUC for the test data is not much above 0.5,
 suggesting that this model does not predict much better than chance,
-and that the model is overfitted because the cross-validation AUC is much higher than the training AUC.
-This isn't too surprising since we're using so few features so don't be discouraged.
+and that the model is overfitted because the cross-valdaton AUC 
+(`cv_metric_AUC`, measured during training) is much higher than the testing AUC.
+This isn't too surprising since we're using so few features with this example dataset,
+so don't be discouraged.
 The default option also provides a number of other performance metrics that you might be interested in,
 including area under the precision-recall curve (prAUC).
 
-At the very end, there are columns for the method and seed (if you set one)
+The last columns of `results$performance` are the method and seed (if you set one)
 to help with combining results from multiple runs (see `vignette("parallel")`).
 
 `feature_importance` has information about feature importances if
@@ -195,14 +195,14 @@ if you think something else would be better for your data.
 
 ## Changing `kfold`, `cv_times`, and `training_frac`
 
-- `kfold`: The number of folds to run for cross-validation (default: 5).
-- `cv_times`: The number of times to run repeated cross-validation (default: 100).
+- `kfold`: The number of folds to run for cross-valdaton (default: 5).
+- `cv_times`: The number of times to run repeated cross-valdaton (default: 100).
 - `training_frac`: The fraction of data for the training set (default: 0.8). The rest of the data is used for testing.
 
 Here's an example where we change some of the default parameters:
 
-```{r, eval}
-results_custom <- run_ml(dat,
+```{r}
+results_custom <- run_ml(otu_mini_bin,
                          'glmnet',
                          kfold = 2,
                          cv_times = 5,
@@ -211,12 +211,13 @@ results_custom <- run_ml(dat,
 ```
 
 You might have noticed that this one ran faster — that's because we reduced `kfold` and `cv_times`.
-This is okay for testing things out, but in general it's better to have these numbers be larger [@topcuoglu_framework_2020].
+This is okay for testing things out and may even be necessary for smaller datasets. 
+But in general it may be better to have larger numbers for these parameters like the defaults [@topcuoglu_framework_2020].
 
 ## Changing the performance metric
 
-There are two arguments that allow you to change what performance metric to use for model evaluation, a
-nd what performance metrics to calculate on the test data.
+There are two arguments that allow you to change what performance metric to use for model evaluation,
+and what performance metrics to calculate on the test data.
 
 `perf_metric_function` is the function to use to calculate the performance metrics.
 
@@ -231,6 +232,7 @@ so you can choose a different one if you'd like.
 The default performance metrics available for classification are:
 
 ```{r, echo=FALSE}
+# TODO: can we get these programmatically somehow instead of hard-coding them?
 c("logLoss", "AUC", "prAUC", "Accuracy", "Kappa", "Mean_F1", "Mean_Sensitivity", "Mean_Specificity", "Mean_Pos_Pred_Value", "Mean_Neg_Pred_Value", "Mean_Precision", "Mean_Recall", "Mean_Detection_Rate", "Mean_Balanced_Accuracy")
 ```
 
@@ -243,14 +245,14 @@ c("RMSE", "Rsquared", "MAE")
 Here's an example using prAUC instead of AUC:
 
 ```{r}
-results_pr <- run_ml(dat, 
+results_pr <- run_ml(otu_mini_bin, 
                      'glmnet', 
                      cv_times = 5, 
                      perf_metric_name = 'prAUC', 
                      seed = 2019)
 ```
 
-You'll see that the cross-validation metric is prAUC, instead of the default AUC:
+You'll see that the cross-valdaton metric is prAUC, instead of the default AUC:
 
 ```{r}
 results_pr$performance
@@ -259,7 +261,7 @@ results_pr$performance
 ## Using groups
 
 The optional `groups` is a vector of groups to keep together when splitting the data into train and test sets and for cross-validation.
-This can be a little finnicky depending on how many samples you have and how many groups you have,
+This can be a little finicky depending on how many samples and groups you have,
 but sometimes it's important to split up the data based on group instead of just randomly.
 This allows you to control for similarities within groups that you don't want to skew your predictions (i.e. batch effects).
 For example, with biological data you may have samples collected from multiple hospitals,
@@ -270,8 +272,8 @@ Here's an example where we split the data into train/test sets based on a group:
 ```{r, eval = FALSE}
 # make random groups
 set.seed(2019)
-grps <- sample(LETTERS[1:8], nrow(dat),replace=TRUE)
-results_grp <- run_ml(dat, 
+grps <- sample(LETTERS[1:8], nrow(otu_mini_bin),replace=TRUE)
+results_grp <- run_ml(otu_mini_bin, 
                       'glmnet', 
                       cv_times = 5, 
                       training_frac = 0.8, 
@@ -279,7 +281,7 @@ results_grp <- run_ml(dat,
                       seed = 2019)
 ```
 
-The one difference here is it tells you how much of the data is in the training set.
+The one difference here is `run_ml()` will report how much of the data is in the training set if you run the above code chunk.
 This is because it won't be exactly what you specify with `training_frac`,
 since you have to include all of one group in either the training set _or_ the test set.
 
@@ -295,12 +297,16 @@ want to know what features are important in predicting your outcome.
 
 Let's look at some feature importance results:
 
-```{r}
-results_imp <- run_ml(dat,
-                      'glmnet',
-                      cv_times = 5,
-                      find_feature_importance = TRUE,
-                      seed = 2019)
+```{r, eval = FALSE}
+results_imp <- run_ml(otu_mini_bin,
+  "rf",
+  outcome_colname = "dx",
+  find_feature_importance = TRUE,
+  seed = 2019
+)
+```
+```{r, echo = FALSE}
+results_imp <- otu_mini_bin_results_rf
 ```
 
 Now, we can check out the feature importances:
@@ -318,12 +324,13 @@ There are several columns:
 1. `perf_metric_name`: The peformance metric used.
 1. `seed`: The seed (if set).
 
-As you can see here, the differences are negligible here (close to zero), which makes sense since our model isn't great. If you're interested in feature importance, it's especially uesful to run multiple different train/test splits, as described here [**Link to snakemake workflow**].
+As you can see here, the differences are negligible here (close to zero), which makes sense since our model isn't great. 
+If you're interested in feature importance, it's especially useful to run multiple different train/test splits, as shown in our [example snakemake workflow](https://github.com/SchlossLab/mikropml-snakemake-workflow/).
 
 You can also choose to permute correlated features together using `corr_thresh` (default: 1). Any features that are above the correlation threshold are permuted together; i.e. perfectly correlated features are permuted together when using the default value.
 
 ```{r}
-results_imp_corr <- run_ml(dat,
+results_imp_corr <- run_ml(otu_mini_bin,
                            'glmnet',
                            cv_times = 5,
                            find_feature_importance = TRUE,
@@ -332,7 +339,8 @@ results_imp_corr <- run_ml(dat,
 results_imp_corr$feature_importance
 ```
 
-You can see what features were permuted together in the `names` column. Here all 3 features were permuted together (which doesn't really make sense, but it's just an example).
+You can see what features were permuted together in the `names` column. 
+Here all 3 features were permuted together (which doesn't really make sense, but it's just an example).
 
 # Tuning hyperparameters (using the `hyperparameter` argument)
 
@@ -348,16 +356,20 @@ The output for all of them is very similar, so we won't go into those details.
 ## Random forest
 
 ```{r, eval = FALSE}
-results_rf <- run_ml(dat,
+results_rf <- run_ml(otu_mini_bin,
                      'rf',
                      cv_times = 5,
                      seed = 2019)
 ```
 
-You can also change the number of trees to use for random forest (`ntree`; default: 1000). This can't be tuned using `rf` package implementation of random forest. Please refer to `caret` documentation if you are interested in other packages with random forest implementations.
+You can also change the number of trees to use for random forest 
+(`ntree`; default: 1000). 
+This can't be tuned using `rf` package implementation of random forest. 
+Please refer to `caret` documentation if you are interested in 
+other packages with random forest implementations.
 
 ```{r, eval = FALSE}
-results_rf_nt <- run_ml(dat,
+results_rf_nt <- run_ml(otu_mini_bin,
                         'rf',
                         cv_times = 5,
                         ntree = 10,
@@ -367,7 +379,7 @@ results_rf_nt <- run_ml(dat,
 ## Decision tree
 
 ```{r, eval = FALSE}
-results_dt <- run_ml(dat,
+results_dt <- run_ml(otu_mini_bin,
                      'rpart2',
                      cv_times = 5,
                      seed = 2019)
@@ -376,25 +388,35 @@ results_dt <- run_ml(dat,
 ## SVM
 
 ```{r, eval = FALSE}
-results_svm <- run_ml(dat,
+results_svm <- run_ml(otu_mini_bin,
                       'svmRadial',
                       cv_times = 5,
                       seed = 2019)
 ```
 
-For more information on the message "maximum number of iterations reached", see [this](https://github.com/topepo/caret/issues/425) post.
+If you get a message "maximum number of iterations reached", see [this issue](https://github.com/topepo/caret/issues/425) in caret.
 
 # Other data
 
 ## Multiclass data
 
-Here's an example of running multiclass data:
+We provide `otu_mini_multi` with a multiclass outcome: 
 
 ```{r}
+otu_mini_multi %>% dplyr::pull('dx') %>% unique()
+```
+
+
+Here's an example of running multiclass data:
+
+```{r, eval = FALSE}
 results_multi <- run_ml(otu_mini_multi,
-                        'glmnet',
-                        cv_times = 5,
-                        seed = 2019)
+                        outcome_colname = "dx",
+                        seed = 2019
+)
+```
+```{r, echo = FALSE}
+results_multi <- otu_mini_multi_results_glmnet
 ```
 
 The performance metrics are slightly different,
@@ -406,17 +428,18 @@ results_multi$performance
 
 ## Continuous data
 
-And here's an example for running continuous data:
+And here's an example for running continuous data, 
+where the outcome column is numerical:
 
-```{r}
-results_cont <- run_ml(dat,
+```{r, eval = FALSE}
+results_cont <- run_ml(otu_mini_bin[, 2:11],
                        'glmnet',
                        outcome_colname = 'Otu00001',
-                       cv_times = 5,
                        seed = 2019)
 ```
-
-You can ignore the warning, because we want it to be continuous data.
+```{r, echo = FALSE}
+results_cont <- otu_mini_cont_results_glmnet
+```
 
 Again, the performance metrics are slightly different,
 but the format of the rest is the same:

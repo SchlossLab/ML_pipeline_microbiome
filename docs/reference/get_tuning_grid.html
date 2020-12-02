@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -159,7 +159,14 @@
     </tr>
     <tr>
       <th>method</th>
-      <td><p>ML method. Options: <code><a href='https://rdrr.io/r/base/c.html'>c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")</a></code>.</p></td>
+      <td><p>ML method.
+Options: <code><a href='https://rdrr.io/r/base/c.html'>c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")</a></code>.</p><ul>
+<li><p>glmnet: linear, logistic, or multiclass regression</p></li>
+<li><p>rf: random forest</p></li>
+<li><p>rpart2: decision tree</p></li>
+<li><p>svmRadial: support vector machine</p></li>
+<li><p>xgbTree: xgboost</p></li>
+</ul></td>
     </tr>
     </table>
 

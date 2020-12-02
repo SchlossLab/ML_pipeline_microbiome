@@ -40,7 +40,11 @@
 
 
 <meta property="og:title" content="Run the machine learning pipeline — run_ml" />
-<meta property="og:description" content="This function runs machine learning (ML), evaluates the best model, and optionally calculates feature importance using a robust framework outlined in this paper. Required inputs are a dataframe with an outcome variable and other columns as features, as well as the ML method.
+<meta property="og:description" content="This function runs machine learning (ML), evaluates the best model,
+and optionally calculates feature importance using a robust framework
+outlined in Topçuoğlu et al. 2020 (doi:10.1128/mBio.00434-20).
+Required inputs are a dataframe with an outcome variable and other columns
+as features, as well as the ML method.
 See vignette('introduction') for more details." />
 
 
@@ -73,7 +77,7 @@ See vignette('introduction') for more details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -98,7 +102,7 @@ See vignette('introduction') for more details." />
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -146,7 +150,11 @@ See vignette('introduction') for more details." />
     </div>
 
     <div class="ref-description">
-    <p>This function runs machine learning (ML), evaluates the best model, and optionally calculates feature importance using a robust framework outlined in <a href='https://mbio.asm.org/content/11/3/e00434-20/'>this</a> paper. Required inputs are a dataframe with an outcome variable and other columns as features, as well as the ML method.
+    <p>This function runs machine learning (ML), evaluates the best model,
+and optionally calculates feature importance using a robust framework
+outlined in Topçuoğlu <em>et al.</em> 2020 (<a href='https://doi.org/10.1128/mBio.00434-20'>doi:10.1128/mBio.00434-20</a>).
+Required inputs are a dataframe with an outcome variable and other columns
+as features, as well as the ML method.
 See <code><a href='../articles/introduction.html'>vignette('introduction')</a></code> for more details.</p>
     </div>
 
@@ -176,19 +184,30 @@ See <code><a href='../articles/introduction.html'>vignette('introduction')</a></
     </tr>
     <tr>
       <th>method</th>
-      <td><p>ML method. Options: <code><a href='https://rdrr.io/r/base/c.html'>c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")</a></code>.</p></td>
+      <td><p>ML method.
+Options: <code><a href='https://rdrr.io/r/base/c.html'>c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")</a></code>.</p><ul>
+<li><p>glmnet: linear, logistic, or multiclass regression</p></li>
+<li><p>rf: random forest</p></li>
+<li><p>rpart2: decision tree</p></li>
+<li><p>svmRadial: support vector machine</p></li>
+<li><p>xgbTree: xgboost</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>outcome_colname</th>
-      <td><p>Column name as a string of the outcome variable (default <code>NULL</code>; the first column will be chosen automatically).</p></td>
+      <td><p>Column name as a string of the outcome variable
+(default <code>NULL</code>; the first column will be chosen automatically).</p></td>
     </tr>
     <tr>
       <th>hyperparameters</th>
-      <td><p>Dataframe of hyperparameters (default <code>NULL</code>; will be chosen automatically).</p></td>
+      <td><p>Dataframe of hyperparameters
+(default <code>NULL</code>; sensible defaults will be chosen automatically).</p></td>
     </tr>
     <tr>
       <th>find_feature_importance</th>
-      <td><p>Run permutation imporance (default: <code>FALSE</code>). This is recommended if you would like to identify features important for predicting your outcome, but it is resource-intensive.</p></td>
+      <td><p>Run permutation importance (default: <code>FALSE</code>).
+<code>TRUE</code> is recommended if you would like to identify features important for
+predicting your outcome, but it is resource-intensive.</p></td>
     </tr>
     <tr>
       <th>kfold</th>
@@ -196,35 +215,50 @@ See <code><a href='../articles/introduction.html'>vignette('introduction')</a></
     </tr>
     <tr>
       <th>cv_times</th>
-      <td><p>Number of partitions to create (default: <code>100</code>).</p></td>
+      <td><p>Number of cross-validation partitions to create (default: <code>100</code>).</p></td>
     </tr>
     <tr>
       <th>training_frac</th>
-      <td><p>Fraction of data for training set (default: <code>0.8</code>). The remaining data will be used in the testing set.</p></td>
+      <td><p>Fraction of data for training set (default: <code>0.8</code>).
+The remaining data will be used in the testing set.</p></td>
     </tr>
     <tr>
       <th>perf_metric_function</th>
-      <td><p>Function to calculate the performance metric to be used for cross-validation and test performance. Some functions are provided by caret (see <code><a href='https://rdrr.io/pkg/caret/man/postResample.html'>caret::defaultSummary()</a></code>). Defaults: binary classification = <code>twoClassSummary</code>, multi-class classification = <code>multiClassSummary</code>, regression = <code>defaultSummary</code>.</p></td>
+      <td><p>Function to calculate the performance metric to
+be used for cross-validation and test performance. Some functions are
+provided by caret (see <code><a href='https://rdrr.io/pkg/caret/man/postResample.html'>caret::defaultSummary()</a></code>).
+Defaults: binary classification = <code>twoClassSummary</code>,
+multi-class classification = <code>multiClassSummary</code>,
+regression = <code>defaultSummary</code>.</p></td>
     </tr>
     <tr>
       <th>perf_metric_name</th>
-      <td><p>The column name from the output of the function provided to perf_metric_function that is to be used as the performance metric. Defaults: binary classification = <code>"ROC"</code>, multi-class classification = <code>"logLoss"</code>, regression = <code>"RMSE"</code>.</p></td>
+      <td><p>The column name from the output of the function
+provided to perf_metric_function that is to be used as the performance metric.
+Defaults: binary classification = <code>"ROC"</code>,
+multi-class classification = <code>"logLoss"</code>,
+regression = <code>"RMSE"</code>.</p></td>
     </tr>
     <tr>
       <th>groups</th>
-      <td><p>Vector of groups to keep together when splitting the data into train and test sets, and for cross-validation; length matches the number of rows in the dataset (default: no groups).</p></td>
+      <td><p>Vector of groups to keep together when splitting the data into
+train and test sets, and for cross-validation.
+length matches the number of rows in the dataset (default: <code>NULL</code>).</p></td>
     </tr>
     <tr>
       <th>corr_thresh</th>
-      <td><p>For feature importance, group correlations above or equal to corr_thresh (default: <code>1</code>).</p></td>
+      <td><p>For feature importance, group correlations
+above or equal to <code>corr_thresh</code> (range <code>0</code> to <code>1</code>; default: <code>1</code>).</p></td>
     </tr>
     <tr>
       <th>ntree</th>
-      <td><p>For random forest, how many trees to use (default: 1000). Note that caret doesn't allow this parameter to be tuned.</p></td>
+      <td><p>For random forest, how many trees to use (default: 1000).
+Note that caret doesn't allow this parameter to be tuned.</p></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>Random seed (default: <code>NA</code>). Your results will be reproducible if you set a seed.</p></td>
+      <td><p>Random seed (default: <code>NA</code>).
+Your results will only be reproducible if you set a seed.</p></td>
     </tr>
     </table>
 
@@ -233,7 +267,7 @@ See <code><a href='../articles/introduction.html'>vignette('introduction')</a></
     <p>Named list with results:</p><ul>
 <li><p><code>trained_model</code>: Output of <code><a href='https://rdrr.io/pkg/caret/man/train.html'>caret::train()</a></code>, including the best model.</p></li>
 <li><p><code>test_data</code>: Part of the data that was used for testing.</p></li>
-<li><p><code>performance</code>: Dataframe of performance metrics. The first column is the cross-validation performance metric, and the last two columns are the ML method used and the seed (if one was set), respectively. All other columns are performance metrics calculated on the test data.</p></li>
+<li><p><code>performance</code>: Dataframe of performance metrics. The first column is the cross-validation performance metric, and the last two columns are the ML method used and the seed (if one was set), respectively. All other columns are performance metrics calculated on the test data. This contains only one row, so you can easily combine performance dataframes from multiple calls to <code>run_ml()</code> (see <code><a href='../articles/parallel.html'>vignette("parallel")</a></code>).</p></li>
 <li><p><code>feature_importance</code>: If feature importances were calculated, a dataframe where each row is a feature or correlated group. The columns are the performance metric of the permuted data, the difference between the true performance metric and the performance metric of the permuted data (true - permuted), the feature name, the ML method, the performance metric name, and the seed (if provided). For AUC and RMSE, the higher perf_metric_diff is, the more important that feature is for predicting the outcome. For log loss, the lower perf_metric_diff is, the more important that feature is for predicting the outcome.</p></li>
 </ul>
 
@@ -241,13 +275,8 @@ See <code><a href='../articles/introduction.html'>vignette('introduction')</a></
 
     
 
-<p>For more details, please see the corresponding vignettes:</p><ul>
-<li><p><a href='http://www.schlosslab.org/mikropml/articles/'>All vignettes</a>.</p></li>
-<li><p><a href='http://www.schlosslab.org/mikropml/articles/introduction.html'>Intro vignette</a>.</p></li>
-<li><p><a href='http://www.schlosslab.org/mikropml/articles/parallel.html'>Parallel vignette</a> to make it run faster.</p></li>
-<li><p><a href='https://github.com/SchlossLab/mikropml-snakemake-workflow'>Snakemake workflow</a> for high-performance computing clusters.</p></li>
-</ul>
 
+<p>For more details, please see <a href='http://www.schlosslab.org/mikropml/articles/'>the vignettes</a>.</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Begüm Topçuoğlu, <a href='mailto:topcuoglu.begum@gmail.com'>topcuoglu.begum@gmail.com</a></p>
@@ -255,14 +284,812 @@ See <code><a href='../articles/introduction.html'>vignette('introduction')</a></
 <p>Kelly Sovacool, <a href='mailto:sovacool@umich.edu'>sovacool@umich.edu</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='fu'>run_ml</span><span class='op'>(</span><span class='va'>otu_small</span>, <span class='st'>"glmnet"</span>,
-  kfold <span class='op'>=</span> <span class='fl'>2</span>,
-  cv_times <span class='op'>=</span> <span class='fl'>2</span>,
   seed <span class='op'>=</span> <span class='fl'>2019</span>
 <span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `caret::train()` issued the following warning:</span>
+#&gt; <span class='warning'> </span>
+#&gt; <span class='warning'>simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
+#&gt; <span class='warning'></span>
+#&gt; <span class='warning'>This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></div><div class='output co'>#&gt; $trained_model
+#&gt; glmnet 
+#&gt; 
+#&gt; 161 samples
+#&gt;  60 predictor
+#&gt;   2 classes: 'cancer', 'normal' 
+#&gt; 
+#&gt; No pre-processing
+#&gt; Resampling: Cross-Validated (5 fold, repeated 1 times) 
+#&gt; Summary of sample sizes: 129, 129, 129, 128, 129, 130, ... 
+#&gt; Resampling results across tuning parameters:
+#&gt; 
+#&gt;   lambda  logLoss    AUC        prAUC      Accuracy   Kappa       F1       
+#&gt;   1e-04   1.3087695  0.5252198  0.5078180  0.5245896  0.04881639  0.5098821
+#&gt;   1e-03   1.3087695  0.5252198  0.5078180  0.5245896  0.04881639  0.5098821
+#&gt;   1e-02   1.3086629  0.5252198  0.5078180  0.5245896  0.04881639  0.5098821
+#&gt;   1e-01   0.8227728  0.5530413  0.5276863  0.5521516  0.10375277  0.5333028
+#&gt;   1e+00   0.6845004  0.5927962  0.5578865  0.5826469  0.16353549  0.5431973
+#&gt;   1e+01   0.6888259  0.6066397  0.5676570  0.5929358  0.18020669  0.4514270
+#&gt;   Sensitivity  Specificity  Pos_Pred_Value  Neg_Pred_Value  Precision
+#&gt;   0.5139250    0.5349191    0.5164759       0.5345116       0.5164759
+#&gt;   0.5139250    0.5349191    0.5164759       0.5345116       0.5164759
+#&gt;   0.5139250    0.5349191    0.5164759       0.5345116       0.5164759
+#&gt;   0.5302083    0.5735147    0.5479530       0.5603439       0.5479530
+#&gt;   0.5156500    0.6475882    0.5895031       0.5832558       0.5895031
+#&gt;   0.3535417    0.8253603    0.6740133       0.5719263       0.6740133
+#&gt;   Recall     Detection_Rate  Balanced_Accuracy
+#&gt;   0.5139250  0.2521275       0.5244221        
+#&gt;   0.5139250  0.2521275       0.5244221        
+#&gt;   0.5139250  0.2521275       0.5244221        
+#&gt;   0.5302083  0.2600748       0.5518615        
+#&gt;   0.5156500  0.2528831       0.5816191        
+#&gt;   0.3535417  0.1729115       0.5894510        
+#&gt; 
+#&gt; Tuning parameter 'alpha' was held constant at a value of 0
+#&gt; AUC was used to select the optimal model using the largest value.
+#&gt; The final values used for the model were alpha = 0 and lambda = 10.
+#&gt; 
+#&gt; $test_data
+#&gt;         dx Otu00025 Otu00042 Otu00005 Otu00045 Otu00017 Otu00055 Otu00012
+#&gt; 1   normal       45      242      208        0      412       13      184
+#&gt; 7   cancer        9        0       30        0       13        0       32
+#&gt; 19  normal       19       11      153        0      507        2       77
+#&gt; 20  normal        4        1      177      253       12       17       43
+#&gt; 23  cancer        3        1       87        0        0        0      360
+#&gt; 27  normal       65       17       21        0        0      220        0
+#&gt; 30  normal       19        8      166        1      657        2       17
+#&gt; 31  normal        9        1      630        0        0      195      109
+#&gt; 35  normal       57        0      593        1      345        8      155
+#&gt; 37  normal      182        0      154        0      718       21       37
+#&gt; 48  normal       26        0       19        1        0        0      174
+#&gt; 53  cancer     1275      311       58        0       69       44       36
+#&gt; 54  normal      323        1       53        2        0        1     1013
+#&gt; 63  normal        5        2       28      828        5        1      188
+#&gt; 67  normal        0      862       23        0       20        0       67
+#&gt; 68  normal        3        0      147        0        1        0      103
+#&gt; 70  normal        7        1      372        0     1591       59       86
+#&gt; 76  cancer        6        2      244        0     1028        1      772
+#&gt; 82  normal       16      145      342        0      103       19       52
+#&gt; 86  cancer        4        1       79        0        0        0      318
+#&gt; 88  normal       77        3      137        0        0       20       81
+#&gt; 108 cancer        4      109      370        0      112        0      268
+#&gt; 110 cancer        4      249       52       65       13        4       30
+#&gt; 112 cancer       43        0        2        0      132        0      262
+#&gt; 113 normal       45      501     1482        0        0        0       88
+#&gt; 116 normal        8       47      316        0       34      106       93
+#&gt; 117 cancer        4        0       17        1        0       19       85
+#&gt; 127 normal       14        1      221        1       25        0      117
+#&gt; 131 cancer        9       11        4      300        8      501      205
+#&gt; 133 cancer      100        0      207        0        0       62      256
+#&gt; 138 normal        0      656       58        2        1       22     1132
+#&gt; 145 cancer       63        5      113        0      182       31       27
+#&gt; 148 cancer       12        0      121        0      278        0       13
+#&gt; 157 cancer      286        0       13        2        1      307        0
+#&gt; 160 cancer       25        0       78        1        0       80      311
+#&gt; 182 cancer        2       30      592        0        1        3      153
+#&gt; 184 cancer      100        2      171        3       85       16       28
+#&gt; 192 cancer      252        0        2        3        0        0       87
+#&gt; 196 cancer      359       99       11        0       20       13      347
+#&gt;     Otu00019 Otu00026 Otu00009 Otu00057 Otu00052 Otu00046 Otu00008 Otu00023
+#&gt; 1        287       69      235       38       42       84      230      115
+#&gt; 7         29      259       10       19       30        0      277      168
+#&gt; 19       251      200      293       60        0       13      174       19
+#&gt; 20        59       14      358        7        0        0      165      225
+#&gt; 23       299      192       21        0        0       32        0      163
+#&gt; 27         0        0        4        0        0        0        1        5
+#&gt; 30      1165        6       13       39        0       19       33       16
+#&gt; 31        22        3       14        0        1        0        0       53
+#&gt; 35       110       16       59      938        0       21       36       81
+#&gt; 37        95        7       10       74        0       72       35       49
+#&gt; 48       161        0       78        4        0        0      478      306
+#&gt; 53         0        2     1063        1        0        0        4      339
+#&gt; 54        66       35      162        0        4       26        0      306
+#&gt; 63        66      280      325       20      453        7       71      362
+#&gt; 67        69      601       33        0        0        5      673       44
+#&gt; 68        36      138      248      170      274      289        0       76
+#&gt; 70         3       14      199        0        0        0      204      139
+#&gt; 76       147       17      210        0      208       28      242       33
+#&gt; 82         0       66      236      143        0        0        0      117
+#&gt; 86       582      383      690       30        0       12        2        0
+#&gt; 88       142       68       55        0        0        0       86       79
+#&gt; 108      208      361       95        0        1        0      127       46
+#&gt; 110       55      271      170        3        1      142      271      213
+#&gt; 112        0       38      106        0        0        0        1       46
+#&gt; 113       55        1      117        0        1        0        0        1
+#&gt; 116      157        3       68       22        0        6      131      132
+#&gt; 117      293        0        1        0        0        0     1232      119
+#&gt; 127       46      173      384        5        0       12        6        0
+#&gt; 131        0       18      458        0        0        0        1        0
+#&gt; 133      361       77       87        0        0        0     1637      174
+#&gt; 138      217       31      129        0        0        0        0       48
+#&gt; 145        2        1        0       24        0        0        3        3
+#&gt; 148       33      285      173        0      333        0        1       92
+#&gt; 157        0        0        2        1        9        0        3        2
+#&gt; 160      167        5      899        0        0       12     1017       28
+#&gt; 182        2      288      217        0        0       69      608       40
+#&gt; 184       33       19       50       16        1       14       16       17
+#&gt; 192       89        5      303        0        0        1        0      130
+#&gt; 196      341       79      214        0        0       13     2775      431
+#&gt;     Otu00030 Otu00047 Otu00003 Otu00020 Otu00058 Otu00043 Otu00036 Otu00041
+#&gt; 1        126        1      213      198       55      223        0       76
+#&gt; 7        105       34      160       45        4      111      610       23
+#&gt; 19       162        0      250       84       76       56        0      125
+#&gt; 20       176        0       71       72        4        0        0       28
+#&gt; 23        88        0      419      434       26      112        0       62
+#&gt; 27         0        0        8        0        0        7        0        2
+#&gt; 30       871        1       58        4       27      729        0       20
+#&gt; 31       229        0      783       16      135        1        3        0
+#&gt; 35       166        0      834       16       96       71        0       18
+#&gt; 37        10        0      192        4       24       77        0       38
+#&gt; 48        61        0       51      657        4        0        0       48
+#&gt; 53         0        0       42       14        1        0        0        4
+#&gt; 54         2        0        1       53        3        2        0        0
+#&gt; 63       108        1      101       61       16        3        1       57
+#&gt; 67        24       37       48       54        3      578        0       15
+#&gt; 68       100        0      229      101       50        1      467      237
+#&gt; 70       110        0      527       10        0        1        0        0
+#&gt; 76       226        0      376       46      390       65        0       53
+#&gt; 82         0        1      226      130        0      259     1420       74
+#&gt; 86        93        0      428        1       23       73        0      115
+#&gt; 88        40        0        1       95      462       24      469        1
+#&gt; 108      164        0      572      145      158        4        0        0
+#&gt; 110      243        0       63       77       26       84        0       67
+#&gt; 112        1       64      657      182       56     1023        0       97
+#&gt; 113      174        0     1142      118       76        1        0        0
+#&gt; 116       22       12      125      112       28       32        1       64
+#&gt; 117        0        0        0        0        0        0      322      158
+#&gt; 127       22        1      628       27        4        3        0      241
+#&gt; 131       11        0       15      123       14        2        0        7
+#&gt; 133        7        0      392       72        5        1     1145        0
+#&gt; 138       24        0      114        0       25        0        1        0
+#&gt; 145       51        2      848       19        0      382        0       21
+#&gt; 148      105        0     1338       51       16      255      330      346
+#&gt; 157        0        0       26        0        0       20        1        3
+#&gt; 160       31        0       14      360        1        6       96        3
+#&gt; 182       13        0      242      172       10        4        0        0
+#&gt; 184       50        7      128       12       28       10       43      305
+#&gt; 192       48        0        1       67        3        2      538        0
+#&gt; 196        0        0        7       43        1        2        0        0
+#&gt;     Otu00031 Otu00048 Otu00060 Otu00028 Otu00001 Otu00014 Otu00037 Otu00007
+#&gt; 1         86        0        0       12      350      542       36       70
+#&gt; 7         24        1        0       11      108       12       47       26
+#&gt; 19        51        0        0        6      282      353       16       33
+#&gt; 20       105        1        0        4     1245      172      321       96
+#&gt; 23        27        1        0        9      322      232       40       70
+#&gt; 27         1      914        0      731        7        0        0      322
+#&gt; 30         3        0        2        3       31      192       11        6
+#&gt; 31       224        7      144        2      878      544      130        2
+#&gt; 35        89        2        8        5      483      709       81      168
+#&gt; 37        11       24        0        3      422      371        3      336
+#&gt; 48         5        5        0        3     1758       36      468     1361
+#&gt; 53         0       46        0       40     1797       23      291        1
+#&gt; 54         2       95        1       24     1513        3        1     1389
+#&gt; 63         8       12        0       37      478       13       67      140
+#&gt; 67        19        0      126        0       20       68       60       32
+#&gt; 68       128        0      252        1      136      438        2      347
+#&gt; 70       344       26        0        1      571      486       48      295
+#&gt; 76       529      138       45        6      931      384        0        0
+#&gt; 82         0       19        0       21      361        0        0      130
+#&gt; 86        25       77        1        0      166        0        0      335
+#&gt; 88        40        0        0       19      191        0       27      120
+#&gt; 108        1        0      124        5      388        1       27       79
+#&gt; 110       90        2        1        5      223       31       10      138
+#&gt; 112        0        0       56        3      329        0       96      297
+#&gt; 113      411        3        0        3      332      325       13      349
+#&gt; 116       25        7        0      120      622       32      147      513
+#&gt; 117       15        7      310      439      203        0        8      242
+#&gt; 127       70       20        2        3      406      154       96      162
+#&gt; 131        7       35        0        2     1016       97      301      760
+#&gt; 133       60        2        0       30      733       41      127      309
+#&gt; 138       14        8        1      568      724      454       88      114
+#&gt; 145       15        2        0     2479      237        2        0       41
+#&gt; 148      249        1        0       40      250      286        5      135
+#&gt; 157        1     1821       18       45     3540        2        0        1
+#&gt; 160        2        1        0       74     1401       46      630     1021
+#&gt; 182       33        4        0       51       71       17        6       53
+#&gt; 184       28       73       11      730      113       38       39       29
+#&gt; 192      120        2        0        6     1321        0      122      260
+#&gt; 196        1       10        0        0     1806        0      414      103
+#&gt;     Otu00034 Otu00006 Otu00029 Otu00056 Otu00016 Otu00039 Otu00027 Otu00038
+#&gt; 1          1      230      161        7        3       13       59        0
+#&gt; 7          0      971      430        0       38       10       64        0
+#&gt; 19         2       53      113        6       46       71       99        0
+#&gt; 20         1      245      244        2      800      336       38        0
+#&gt; 23         0      201       82       59        0        6      219        0
+#&gt; 27      5739        5        5        2        6        0        3        1
+#&gt; 30         2       30        1        6        0     1591        6        3
+#&gt; 31        15      845       68        0       94       24        7      201
+#&gt; 35         3      234      105        5      304       31       31        1
+#&gt; 37        18     1012        4      140      109      183      173      876
+#&gt; 48         8      705      477        0      115      105        3        1
+#&gt; 53        82      404        0        1        1        1      335       14
+#&gt; 54       113       44       48        1      436        0       20       42
+#&gt; 63        43      179      280       58      133      100        1       92
+#&gt; 67         1       74       42       97      423        6      251        0
+#&gt; 68         0      303        6       94      202        8        9        0
+#&gt; 70        35      648      100       44        5       31       13      688
+#&gt; 76        25      130        0        0       84       34       19       13
+#&gt; 82        50      256      281      188        0        0      104        0
+#&gt; 86         0        6       71        0      157        0      512        0
+#&gt; 88        15      172        1       84       33       31       68       27
+#&gt; 108        5      544        0       75       20        0      100       61
+#&gt; 110        2       53       53      133      156      107      123        1
+#&gt; 112       55        1        1       61       36        0      115        2
+#&gt; 113       70      428       68       28       31       45        1       24
+#&gt; 116      116      309       55      130      107       48        7       22
+#&gt; 117        0      872      186       36      261        8        9        3
+#&gt; 127        3      184        2       25       11       59       19      148
+#&gt; 131        4      268      418       12      494        0      132       12
+#&gt; 133        5      418      317        7      109      111       70       43
+#&gt; 138        4      116       93       78        0       63        5       51
+#&gt; 145        8       26      226       66       32       22        8        3
+#&gt; 148        0        9       41        4      141        1      291       94
+#&gt; 157      259       15        2        0        2        0       29       16
+#&gt; 160        1      104       83        1      123      300      353        3
+#&gt; 182        0       50       73       50       21      662       74       54
+#&gt; 184       77       57        7       21       35       16       19       16
+#&gt; 192       54      490        0       89        7        0        5     2633
+#&gt; 196        8        1        0        0        0       55        0        0
+#&gt;     Otu00049 Otu00024 Otu00015 Otu00032 Otu00054 Otu00022 Otu00010 Otu00018
+#&gt; 1        129       63      334      321       24      518       64      222
+#&gt; 7         56        6       71       24       15       91       55       33
+#&gt; 19       139       81      311      138       24      145      201      168
+#&gt; 20         0       15      159        4        0      258      658      749
+#&gt; 23       117        0      280       95       14       97       56      197
+#&gt; 27       181        0        2        6        0        1      161        2
+#&gt; 30         0       67       17       79        0        4        5        0
+#&gt; 31        21      278        1        1       31      397      116      135
+#&gt; 35        87      655      118       18        1        0      309      101
+#&gt; 37         7      318      142      185        5       59       12      220
+#&gt; 48         0        7        2        7        0       14      222      118
+#&gt; 53         0        2        2        2        4        6      203        0
+#&gt; 54         2       23        4        0       17      122       68        3
+#&gt; 63         1       15      109       15        0        5       43      302
+#&gt; 67       146        4       30        3        0       35       92       24
+#&gt; 68         0      129      145       78        0       23      148      138
+#&gt; 70         1      308      449        0      219      100      134      401
+#&gt; 76         0      145       52       95       15        1       88      505
+#&gt; 82         2      216        0        0        5       86      126        1
+#&gt; 86        18       11        4        0        8       38       85      591
+#&gt; 88        11      167      236        0        1      277      108      100
+#&gt; 108        9      238      298      151       43      439      119      280
+#&gt; 110       58       28       45       52       28       29       50       61
+#&gt; 112      487        0      318        6       23        0        0        2
+#&gt; 113        0        0      460      166       18       17      298      133
+#&gt; 116        1      151      206       42       30       12      217      389
+#&gt; 117        1       24       30       28        6        3      433      137
+#&gt; 127       11       41       63        3       61       58      361       17
+#&gt; 131        0       35      265       83        9       21      499      226
+#&gt; 133        8       27       26       15        1       25       79      146
+#&gt; 138        0      136      234      418       54      106       15       45
+#&gt; 145       13       47      703       28       56        8       10       31
+#&gt; 148      155       75       22      160       29      667       22      123
+#&gt; 157       18        4        0        2        0        0        2        0
+#&gt; 160        0        1       70        5        0        3       32      346
+#&gt; 182        2      134       43        0       13        2       46      544
+#&gt; 184       10      101      109      288       15       82       88       75
+#&gt; 192        0        0        1        0       68        1      118        2
+#&gt; 196        0        0        0        0       22        0      199     1097
+#&gt;     Otu00059 Otu00033 Otu00002 Otu00021 Otu00053 Otu00004 Otu00051 Otu00044
+#&gt; 1         35       39      268       56       25        1        0       11
+#&gt; 7         11       10      120        0       25      349        0      142
+#&gt; 19        19       52      331       95       12       86        1       82
+#&gt; 20        17      126       24        3       37        5      164       30
+#&gt; 23       112        4      173        0        5       80        0       63
+#&gt; 27         0      263       25        0        1       27        0        0
+#&gt; 30        26        2      179       68        0        5        0       17
+#&gt; 31         1       76      866        2        0        0        1        8
+#&gt; 35        20       33     1564       74       10        7        0       35
+#&gt; 37        35        1      230      123        3        3        0      219
+#&gt; 48         0       71       36        9        0        3        0       12
+#&gt; 53         0        2       92       45        0        2        0        1
+#&gt; 54         0       34      140       16        0      840        0       18
+#&gt; 63         1       17      158        1       11      250       88       21
+#&gt; 67        91       26       42        1        9        2        0       26
+#&gt; 68        20       43      812        0       45      495        0      197
+#&gt; 70         0       23        2      366        0       10        0       18
+#&gt; 76         0       28       87        1       65      422        0        2
+#&gt; 82         1       95     1262     1016        0        0        0        0
+#&gt; 86         0       48       91        0        1      589        0       25
+#&gt; 88         0       91     1110      669      102        0        0       56
+#&gt; 108        0       14     1079        1        0        0        0       86
+#&gt; 110       13       46      144        3       17        0       98      272
+#&gt; 112        0        0        1        1        0        4        0      129
+#&gt; 113        2       43      656      535       30        0        0      109
+#&gt; 116        0       38      343      296       19      375       86       38
+#&gt; 117        0      306      275       47       17      349        0       22
+#&gt; 127        9       52      354      369       12       76        1       18
+#&gt; 131        0      240       98       77        1        4      165       15
+#&gt; 133       14       73      216       21        4       63        0      155
+#&gt; 138        0        3      224     1021       14        0        0      151
+#&gt; 145        0        0      293      846       16        5        0       52
+#&gt; 148        0        0      167        1       42      349        0        0
+#&gt; 157        0        0       28        0        2     1482        0        3
+#&gt; 160        0       37       25        0        1       49        0       16
+#&gt; 182      122       44       68      116        4        2        0      122
+#&gt; 184        4       15      749      101      131       92      219       13
+#&gt; 192        0       55        4        0        0        4        0      406
+#&gt; 196        0      176       10        0        0        1        0       22
+#&gt;     Otu00050 Otu00013 Otu00040 Otu00035 Otu00011
+#&gt; 1          6      444       51       24      359
+#&gt; 7          2      234        3        0       87
+#&gt; 19       135       39       20      161       73
+#&gt; 20         2      290      187        5      467
+#&gt; 23        18       75      130      178      263
+#&gt; 27         3        1        0        0        0
+#&gt; 30         0       14        9        0       16
+#&gt; 31         0      188       79      525      832
+#&gt; 35         0      148       59        0      199
+#&gt; 37         0      388       17        0      482
+#&gt; 48         0      800       63        9      949
+#&gt; 53         2      299       81        0      353
+#&gt; 54       575        3      154        0        1
+#&gt; 63         3       45      245        0      108
+#&gt; 67       391      113        3       16       57
+#&gt; 68       108       85       24      105      381
+#&gt; 70         1      110       51      226      168
+#&gt; 76         1        0        0       50      321
+#&gt; 82         0      238      152        6        0
+#&gt; 86       146        0        9       46      422
+#&gt; 88        66       95        0      221      147
+#&gt; 108       29      129      296        0       48
+#&gt; 110      209      154       21        1      104
+#&gt; 112       26      121      423       52        0
+#&gt; 113        8       61        0        0      122
+#&gt; 116        1      172       26        8      716
+#&gt; 117        5       74       71       19       13
+#&gt; 127       70       50        1        0       33
+#&gt; 131        7      135        0        0      261
+#&gt; 133       86      200      200      257       92
+#&gt; 138      137      152       36      517      322
+#&gt; 145        1        2        0        7      414
+#&gt; 148       14       31       99        5      250
+#&gt; 157        0      508        0        4        0
+#&gt; 160        1      340        6        0      548
+#&gt; 182      126      169      149     1457      221
+#&gt; 184        9       24       12       45       74
+#&gt; 192        1      194      187        1      118
+#&gt; 196        0      233        0        0       43
+#&gt; 
+#&gt; $performance
+#&gt; <span style='color: #555555;'># A tibble: 1 x 17</span><span>
+#&gt;   cv_metric_AUC logLoss   AUC prAUC Accuracy Kappa    F1 Sensitivity Specificity
+#&gt;           </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>         0.607   0.678 0.737 0.697    0.564 0.117 0.653         0.8       0.316
+#&gt; </span><span style='color: #555555;'># … with 8 more variables: Pos_Pred_Value </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Neg_Pred_Value </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   Precision </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Recall </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Detection_Rate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   Balanced_Accuracy </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, method </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, seed </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; 
+#&gt; $feature_importance
+#&gt; [1] "Skipped feature importance"
+#&gt; </div><div class='input'><span class='fu'>run_ml</span><span class='op'>(</span><span class='va'>otu_small</span>, <span class='st'>"rf"</span>,
+  outcome_colname <span class='op'>=</span> <span class='st'>"dx"</span>,
+  find_feature_importance <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='output co'>#&gt; $trained_model
+#&gt; Random Forest 
+#&gt; 
+#&gt; 161 samples
+#&gt;  60 predictor
+#&gt;   2 classes: 'cancer', 'normal' 
+#&gt; 
+#&gt; No pre-processing
+#&gt; Resampling: Cross-Validated (5 fold, repeated 1 times) 
+#&gt; Summary of sample sizes: 129, 129, 129, 128, 129, 130, ... 
+#&gt; Resampling results across tuning parameters:
+#&gt; 
+#&gt;   mtry  logLoss    AUC        prAUC      Accuracy   Kappa      F1       
+#&gt;    4    0.6580445  0.6573024  0.6158804  0.6015753  0.2033696  0.5949380
+#&gt;    8    0.6575875  0.6552510  0.6136425  0.5999283  0.2001099  0.5950995
+#&gt;   16    0.6590979  0.6527849  0.6106958  0.5951932  0.1908390  0.5920849
+#&gt;   Sensitivity  Specificity  Pos_Pred_Value  Neg_Pred_Value  Precision
+#&gt;   0.6056750    0.5979485    0.5951482       0.6159108       0.5951482
+#&gt;   0.6073417    0.5929853    0.5932445       0.6140531       0.5932445
+#&gt;   0.6065750    0.5845221    0.5881585       0.6098887       0.5881585
+#&gt;   Recall     Detection_Rate  Balanced_Accuracy
+#&gt;   0.6056750  0.2970549       0.6018118        
+#&gt;   0.6073417  0.2979131       0.6001635        
+#&gt;   0.6065750  0.2975378       0.5955485        
+#&gt; 
+#&gt; AUC was used to select the optimal model using the largest value.
+#&gt; The final value used for the model was mtry = 4.
+#&gt; 
+#&gt; $test_data
+#&gt;         dx Otu00025 Otu00042 Otu00005 Otu00045 Otu00017 Otu00055 Otu00012
+#&gt; 1   normal       45      242      208        0      412       13      184
+#&gt; 7   cancer        9        0       30        0       13        0       32
+#&gt; 19  normal       19       11      153        0      507        2       77
+#&gt; 20  normal        4        1      177      253       12       17       43
+#&gt; 23  cancer        3        1       87        0        0        0      360
+#&gt; 27  normal       65       17       21        0        0      220        0
+#&gt; 30  normal       19        8      166        1      657        2       17
+#&gt; 31  normal        9        1      630        0        0      195      109
+#&gt; 35  normal       57        0      593        1      345        8      155
+#&gt; 37  normal      182        0      154        0      718       21       37
+#&gt; 48  normal       26        0       19        1        0        0      174
+#&gt; 53  cancer     1275      311       58        0       69       44       36
+#&gt; 54  normal      323        1       53        2        0        1     1013
+#&gt; 63  normal        5        2       28      828        5        1      188
+#&gt; 67  normal        0      862       23        0       20        0       67
+#&gt; 68  normal        3        0      147        0        1        0      103
+#&gt; 70  normal        7        1      372        0     1591       59       86
+#&gt; 76  cancer        6        2      244        0     1028        1      772
+#&gt; 82  normal       16      145      342        0      103       19       52
+#&gt; 86  cancer        4        1       79        0        0        0      318
+#&gt; 88  normal       77        3      137        0        0       20       81
+#&gt; 108 cancer        4      109      370        0      112        0      268
+#&gt; 110 cancer        4      249       52       65       13        4       30
+#&gt; 112 cancer       43        0        2        0      132        0      262
+#&gt; 113 normal       45      501     1482        0        0        0       88
+#&gt; 116 normal        8       47      316        0       34      106       93
+#&gt; 117 cancer        4        0       17        1        0       19       85
+#&gt; 127 normal       14        1      221        1       25        0      117
+#&gt; 131 cancer        9       11        4      300        8      501      205
+#&gt; 133 cancer      100        0      207        0        0       62      256
+#&gt; 138 normal        0      656       58        2        1       22     1132
+#&gt; 145 cancer       63        5      113        0      182       31       27
+#&gt; 148 cancer       12        0      121        0      278        0       13
+#&gt; 157 cancer      286        0       13        2        1      307        0
+#&gt; 160 cancer       25        0       78        1        0       80      311
+#&gt; 182 cancer        2       30      592        0        1        3      153
+#&gt; 184 cancer      100        2      171        3       85       16       28
+#&gt; 192 cancer      252        0        2        3        0        0       87
+#&gt; 196 cancer      359       99       11        0       20       13      347
+#&gt;     Otu00019 Otu00026 Otu00009 Otu00057 Otu00052 Otu00046 Otu00008 Otu00023
+#&gt; 1        287       69      235       38       42       84      230      115
+#&gt; 7         29      259       10       19       30        0      277      168
+#&gt; 19       251      200      293       60        0       13      174       19
+#&gt; 20        59       14      358        7        0        0      165      225
+#&gt; 23       299      192       21        0        0       32        0      163
+#&gt; 27         0        0        4        0        0        0        1        5
+#&gt; 30      1165        6       13       39        0       19       33       16
+#&gt; 31        22        3       14        0        1        0        0       53
+#&gt; 35       110       16       59      938        0       21       36       81
+#&gt; 37        95        7       10       74        0       72       35       49
+#&gt; 48       161        0       78        4        0        0      478      306
+#&gt; 53         0        2     1063        1        0        0        4      339
+#&gt; 54        66       35      162        0        4       26        0      306
+#&gt; 63        66      280      325       20      453        7       71      362
+#&gt; 67        69      601       33        0        0        5      673       44
+#&gt; 68        36      138      248      170      274      289        0       76
+#&gt; 70         3       14      199        0        0        0      204      139
+#&gt; 76       147       17      210        0      208       28      242       33
+#&gt; 82         0       66      236      143        0        0        0      117
+#&gt; 86       582      383      690       30        0       12        2        0
+#&gt; 88       142       68       55        0        0        0       86       79
+#&gt; 108      208      361       95        0        1        0      127       46
+#&gt; 110       55      271      170        3        1      142      271      213
+#&gt; 112        0       38      106        0        0        0        1       46
+#&gt; 113       55        1      117        0        1        0        0        1
+#&gt; 116      157        3       68       22        0        6      131      132
+#&gt; 117      293        0        1        0        0        0     1232      119
+#&gt; 127       46      173      384        5        0       12        6        0
+#&gt; 131        0       18      458        0        0        0        1        0
+#&gt; 133      361       77       87        0        0        0     1637      174
+#&gt; 138      217       31      129        0        0        0        0       48
+#&gt; 145        2        1        0       24        0        0        3        3
+#&gt; 148       33      285      173        0      333        0        1       92
+#&gt; 157        0        0        2        1        9        0        3        2
+#&gt; 160      167        5      899        0        0       12     1017       28
+#&gt; 182        2      288      217        0        0       69      608       40
+#&gt; 184       33       19       50       16        1       14       16       17
+#&gt; 192       89        5      303        0        0        1        0      130
+#&gt; 196      341       79      214        0        0       13     2775      431
+#&gt;     Otu00030 Otu00047 Otu00003 Otu00020 Otu00058 Otu00043 Otu00036 Otu00041
+#&gt; 1        126        1      213      198       55      223        0       76
+#&gt; 7        105       34      160       45        4      111      610       23
+#&gt; 19       162        0      250       84       76       56        0      125
+#&gt; 20       176        0       71       72        4        0        0       28
+#&gt; 23        88        0      419      434       26      112        0       62
+#&gt; 27         0        0        8        0        0        7        0        2
+#&gt; 30       871        1       58        4       27      729        0       20
+#&gt; 31       229        0      783       16      135        1        3        0
+#&gt; 35       166        0      834       16       96       71        0       18
+#&gt; 37        10        0      192        4       24       77        0       38
+#&gt; 48        61        0       51      657        4        0        0       48
+#&gt; 53         0        0       42       14        1        0        0        4
+#&gt; 54         2        0        1       53        3        2        0        0
+#&gt; 63       108        1      101       61       16        3        1       57
+#&gt; 67        24       37       48       54        3      578        0       15
+#&gt; 68       100        0      229      101       50        1      467      237
+#&gt; 70       110        0      527       10        0        1        0        0
+#&gt; 76       226        0      376       46      390       65        0       53
+#&gt; 82         0        1      226      130        0      259     1420       74
+#&gt; 86        93        0      428        1       23       73        0      115
+#&gt; 88        40        0        1       95      462       24      469        1
+#&gt; 108      164        0      572      145      158        4        0        0
+#&gt; 110      243        0       63       77       26       84        0       67
+#&gt; 112        1       64      657      182       56     1023        0       97
+#&gt; 113      174        0     1142      118       76        1        0        0
+#&gt; 116       22       12      125      112       28       32        1       64
+#&gt; 117        0        0        0        0        0        0      322      158
+#&gt; 127       22        1      628       27        4        3        0      241
+#&gt; 131       11        0       15      123       14        2        0        7
+#&gt; 133        7        0      392       72        5        1     1145        0
+#&gt; 138       24        0      114        0       25        0        1        0
+#&gt; 145       51        2      848       19        0      382        0       21
+#&gt; 148      105        0     1338       51       16      255      330      346
+#&gt; 157        0        0       26        0        0       20        1        3
+#&gt; 160       31        0       14      360        1        6       96        3
+#&gt; 182       13        0      242      172       10        4        0        0
+#&gt; 184       50        7      128       12       28       10       43      305
+#&gt; 192       48        0        1       67        3        2      538        0
+#&gt; 196        0        0        7       43        1        2        0        0
+#&gt;     Otu00031 Otu00048 Otu00060 Otu00028 Otu00001 Otu00014 Otu00037 Otu00007
+#&gt; 1         86        0        0       12      350      542       36       70
+#&gt; 7         24        1        0       11      108       12       47       26
+#&gt; 19        51        0        0        6      282      353       16       33
+#&gt; 20       105        1        0        4     1245      172      321       96
+#&gt; 23        27        1        0        9      322      232       40       70
+#&gt; 27         1      914        0      731        7        0        0      322
+#&gt; 30         3        0        2        3       31      192       11        6
+#&gt; 31       224        7      144        2      878      544      130        2
+#&gt; 35        89        2        8        5      483      709       81      168
+#&gt; 37        11       24        0        3      422      371        3      336
+#&gt; 48         5        5        0        3     1758       36      468     1361
+#&gt; 53         0       46        0       40     1797       23      291        1
+#&gt; 54         2       95        1       24     1513        3        1     1389
+#&gt; 63         8       12        0       37      478       13       67      140
+#&gt; 67        19        0      126        0       20       68       60       32
+#&gt; 68       128        0      252        1      136      438        2      347
+#&gt; 70       344       26        0        1      571      486       48      295
+#&gt; 76       529      138       45        6      931      384        0        0
+#&gt; 82         0       19        0       21      361        0        0      130
+#&gt; 86        25       77        1        0      166        0        0      335
+#&gt; 88        40        0        0       19      191        0       27      120
+#&gt; 108        1        0      124        5      388        1       27       79
+#&gt; 110       90        2        1        5      223       31       10      138
+#&gt; 112        0        0       56        3      329        0       96      297
+#&gt; 113      411        3        0        3      332      325       13      349
+#&gt; 116       25        7        0      120      622       32      147      513
+#&gt; 117       15        7      310      439      203        0        8      242
+#&gt; 127       70       20        2        3      406      154       96      162
+#&gt; 131        7       35        0        2     1016       97      301      760
+#&gt; 133       60        2        0       30      733       41      127      309
+#&gt; 138       14        8        1      568      724      454       88      114
+#&gt; 145       15        2        0     2479      237        2        0       41
+#&gt; 148      249        1        0       40      250      286        5      135
+#&gt; 157        1     1821       18       45     3540        2        0        1
+#&gt; 160        2        1        0       74     1401       46      630     1021
+#&gt; 182       33        4        0       51       71       17        6       53
+#&gt; 184       28       73       11      730      113       38       39       29
+#&gt; 192      120        2        0        6     1321        0      122      260
+#&gt; 196        1       10        0        0     1806        0      414      103
+#&gt;     Otu00034 Otu00006 Otu00029 Otu00056 Otu00016 Otu00039 Otu00027 Otu00038
+#&gt; 1          1      230      161        7        3       13       59        0
+#&gt; 7          0      971      430        0       38       10       64        0
+#&gt; 19         2       53      113        6       46       71       99        0
+#&gt; 20         1      245      244        2      800      336       38        0
+#&gt; 23         0      201       82       59        0        6      219        0
+#&gt; 27      5739        5        5        2        6        0        3        1
+#&gt; 30         2       30        1        6        0     1591        6        3
+#&gt; 31        15      845       68        0       94       24        7      201
+#&gt; 35         3      234      105        5      304       31       31        1
+#&gt; 37        18     1012        4      140      109      183      173      876
+#&gt; 48         8      705      477        0      115      105        3        1
+#&gt; 53        82      404        0        1        1        1      335       14
+#&gt; 54       113       44       48        1      436        0       20       42
+#&gt; 63        43      179      280       58      133      100        1       92
+#&gt; 67         1       74       42       97      423        6      251        0
+#&gt; 68         0      303        6       94      202        8        9        0
+#&gt; 70        35      648      100       44        5       31       13      688
+#&gt; 76        25      130        0        0       84       34       19       13
+#&gt; 82        50      256      281      188        0        0      104        0
+#&gt; 86         0        6       71        0      157        0      512        0
+#&gt; 88        15      172        1       84       33       31       68       27
+#&gt; 108        5      544        0       75       20        0      100       61
+#&gt; 110        2       53       53      133      156      107      123        1
+#&gt; 112       55        1        1       61       36        0      115        2
+#&gt; 113       70      428       68       28       31       45        1       24
+#&gt; 116      116      309       55      130      107       48        7       22
+#&gt; 117        0      872      186       36      261        8        9        3
+#&gt; 127        3      184        2       25       11       59       19      148
+#&gt; 131        4      268      418       12      494        0      132       12
+#&gt; 133        5      418      317        7      109      111       70       43
+#&gt; 138        4      116       93       78        0       63        5       51
+#&gt; 145        8       26      226       66       32       22        8        3
+#&gt; 148        0        9       41        4      141        1      291       94
+#&gt; 157      259       15        2        0        2        0       29       16
+#&gt; 160        1      104       83        1      123      300      353        3
+#&gt; 182        0       50       73       50       21      662       74       54
+#&gt; 184       77       57        7       21       35       16       19       16
+#&gt; 192       54      490        0       89        7        0        5     2633
+#&gt; 196        8        1        0        0        0       55        0        0
+#&gt;     Otu00049 Otu00024 Otu00015 Otu00032 Otu00054 Otu00022 Otu00010 Otu00018
+#&gt; 1        129       63      334      321       24      518       64      222
+#&gt; 7         56        6       71       24       15       91       55       33
+#&gt; 19       139       81      311      138       24      145      201      168
+#&gt; 20         0       15      159        4        0      258      658      749
+#&gt; 23       117        0      280       95       14       97       56      197
+#&gt; 27       181        0        2        6        0        1      161        2
+#&gt; 30         0       67       17       79        0        4        5        0
+#&gt; 31        21      278        1        1       31      397      116      135
+#&gt; 35        87      655      118       18        1        0      309      101
+#&gt; 37         7      318      142      185        5       59       12      220
+#&gt; 48         0        7        2        7        0       14      222      118
+#&gt; 53         0        2        2        2        4        6      203        0
+#&gt; 54         2       23        4        0       17      122       68        3
+#&gt; 63         1       15      109       15        0        5       43      302
+#&gt; 67       146        4       30        3        0       35       92       24
+#&gt; 68         0      129      145       78        0       23      148      138
+#&gt; 70         1      308      449        0      219      100      134      401
+#&gt; 76         0      145       52       95       15        1       88      505
+#&gt; 82         2      216        0        0        5       86      126        1
+#&gt; 86        18       11        4        0        8       38       85      591
+#&gt; 88        11      167      236        0        1      277      108      100
+#&gt; 108        9      238      298      151       43      439      119      280
+#&gt; 110       58       28       45       52       28       29       50       61
+#&gt; 112      487        0      318        6       23        0        0        2
+#&gt; 113        0        0      460      166       18       17      298      133
+#&gt; 116        1      151      206       42       30       12      217      389
+#&gt; 117        1       24       30       28        6        3      433      137
+#&gt; 127       11       41       63        3       61       58      361       17
+#&gt; 131        0       35      265       83        9       21      499      226
+#&gt; 133        8       27       26       15        1       25       79      146
+#&gt; 138        0      136      234      418       54      106       15       45
+#&gt; 145       13       47      703       28       56        8       10       31
+#&gt; 148      155       75       22      160       29      667       22      123
+#&gt; 157       18        4        0        2        0        0        2        0
+#&gt; 160        0        1       70        5        0        3       32      346
+#&gt; 182        2      134       43        0       13        2       46      544
+#&gt; 184       10      101      109      288       15       82       88       75
+#&gt; 192        0        0        1        0       68        1      118        2
+#&gt; 196        0        0        0        0       22        0      199     1097
+#&gt;     Otu00059 Otu00033 Otu00002 Otu00021 Otu00053 Otu00004 Otu00051 Otu00044
+#&gt; 1         35       39      268       56       25        1        0       11
+#&gt; 7         11       10      120        0       25      349        0      142
+#&gt; 19        19       52      331       95       12       86        1       82
+#&gt; 20        17      126       24        3       37        5      164       30
+#&gt; 23       112        4      173        0        5       80        0       63
+#&gt; 27         0      263       25        0        1       27        0        0
+#&gt; 30        26        2      179       68        0        5        0       17
+#&gt; 31         1       76      866        2        0        0        1        8
+#&gt; 35        20       33     1564       74       10        7        0       35
+#&gt; 37        35        1      230      123        3        3        0      219
+#&gt; 48         0       71       36        9        0        3        0       12
+#&gt; 53         0        2       92       45        0        2        0        1
+#&gt; 54         0       34      140       16        0      840        0       18
+#&gt; 63         1       17      158        1       11      250       88       21
+#&gt; 67        91       26       42        1        9        2        0       26
+#&gt; 68        20       43      812        0       45      495        0      197
+#&gt; 70         0       23        2      366        0       10        0       18
+#&gt; 76         0       28       87        1       65      422        0        2
+#&gt; 82         1       95     1262     1016        0        0        0        0
+#&gt; 86         0       48       91        0        1      589        0       25
+#&gt; 88         0       91     1110      669      102        0        0       56
+#&gt; 108        0       14     1079        1        0        0        0       86
+#&gt; 110       13       46      144        3       17        0       98      272
+#&gt; 112        0        0        1        1        0        4        0      129
+#&gt; 113        2       43      656      535       30        0        0      109
+#&gt; 116        0       38      343      296       19      375       86       38
+#&gt; 117        0      306      275       47       17      349        0       22
+#&gt; 127        9       52      354      369       12       76        1       18
+#&gt; 131        0      240       98       77        1        4      165       15
+#&gt; 133       14       73      216       21        4       63        0      155
+#&gt; 138        0        3      224     1021       14        0        0      151
+#&gt; 145        0        0      293      846       16        5        0       52
+#&gt; 148        0        0      167        1       42      349        0        0
+#&gt; 157        0        0       28        0        2     1482        0        3
+#&gt; 160        0       37       25        0        1       49        0       16
+#&gt; 182      122       44       68      116        4        2        0      122
+#&gt; 184        4       15      749      101      131       92      219       13
+#&gt; 192        0       55        4        0        0        4        0      406
+#&gt; 196        0      176       10        0        0        1        0       22
+#&gt;     Otu00050 Otu00013 Otu00040 Otu00035 Otu00011
+#&gt; 1          6      444       51       24      359
+#&gt; 7          2      234        3        0       87
+#&gt; 19       135       39       20      161       73
+#&gt; 20         2      290      187        5      467
+#&gt; 23        18       75      130      178      263
+#&gt; 27         3        1        0        0        0
+#&gt; 30         0       14        9        0       16
+#&gt; 31         0      188       79      525      832
+#&gt; 35         0      148       59        0      199
+#&gt; 37         0      388       17        0      482
+#&gt; 48         0      800       63        9      949
+#&gt; 53         2      299       81        0      353
+#&gt; 54       575        3      154        0        1
+#&gt; 63         3       45      245        0      108
+#&gt; 67       391      113        3       16       57
+#&gt; 68       108       85       24      105      381
+#&gt; 70         1      110       51      226      168
+#&gt; 76         1        0        0       50      321
+#&gt; 82         0      238      152        6        0
+#&gt; 86       146        0        9       46      422
+#&gt; 88        66       95        0      221      147
+#&gt; 108       29      129      296        0       48
+#&gt; 110      209      154       21        1      104
+#&gt; 112       26      121      423       52        0
+#&gt; 113        8       61        0        0      122
+#&gt; 116        1      172       26        8      716
+#&gt; 117        5       74       71       19       13
+#&gt; 127       70       50        1        0       33
+#&gt; 131        7      135        0        0      261
+#&gt; 133       86      200      200      257       92
+#&gt; 138      137      152       36      517      322
+#&gt; 145        1        2        0        7      414
+#&gt; 148       14       31       99        5      250
+#&gt; 157        0      508        0        4        0
+#&gt; 160        1      340        6        0      548
+#&gt; 182      126      169      149     1457      221
+#&gt; 184        9       24       12       45       74
+#&gt; 192        1      194      187        1      118
+#&gt; 196        0      233        0        0       43
+#&gt; 
+#&gt; $performance
+#&gt; </span><span style='color: #555555;'># A tibble: 1 x 17</span><span>
+#&gt;   cv_metric_AUC logLoss   AUC prAUC Accuracy Kappa    F1 Sensitivity Specificity
+#&gt;           </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>         0.657   0.633 0.737 0.686    0.744 0.490 0.722        0.65       0.842
+#&gt; </span><span style='color: #555555;'># … with 8 more variables: Pos_Pred_Value </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Neg_Pred_Value </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   Precision </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Recall </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Detection_Rate </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   Balanced_Accuracy </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, method </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, seed </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
+#&gt; 
+#&gt; $feature_importance
+#&gt;    perf_metric perf_metric_diff    names method perf_metric_name seed
+#&gt; 1    0.7503421    -0.0135000000 Otu00025     rf              AUC   NA
+#&gt; 2    0.7454868    -0.0086447368 Otu00042     rf              AUC   NA
+#&gt; 3    0.7424474    -0.0056052632 Otu00005     rf              AUC   NA
+#&gt; 4    0.7355263     0.0013157895 Otu00045     rf              AUC   NA
+#&gt; 5    0.7423816    -0.0055394737 Otu00017     rf              AUC   NA
+#&gt; 6    0.7426842    -0.0058421053 Otu00055     rf              AUC   NA
+#&gt; 7    0.7471184    -0.0102763158 Otu00012     rf              AUC   NA
+#&gt; 8    0.7332632     0.0035789474 Otu00019     rf              AUC   NA
+#&gt; 9    0.7339342     0.0029078947 Otu00026     rf              AUC   NA
+#&gt; 10   0.7404474    -0.0036052632 Otu00009     rf              AUC   NA
+#&gt; 11   0.7385395    -0.0016973684 Otu00057     rf              AUC   NA
+#&gt; 12   0.7324342     0.0044078947 Otu00052     rf              AUC   NA
+#&gt; 13   0.7381053    -0.0012631579 Otu00046     rf              AUC   NA
+#&gt; 14   0.7421711    -0.0053289474 Otu00008     rf              AUC   NA
+#&gt; 15   0.7418158    -0.0049736842 Otu00023     rf              AUC   NA
+#&gt; 16   0.7419737    -0.0051315789 Otu00030     rf              AUC   NA
+#&gt; 17   0.7335395     0.0033026316 Otu00047     rf              AUC   NA
+#&gt; 18   0.7549605    -0.0181184211 Otu00003     rf              AUC   NA
+#&gt; 19   0.7276184     0.0092236842 Otu00020     rf              AUC   NA
+#&gt; 20   0.7474868    -0.0106447368 Otu00058     rf              AUC   NA
+#&gt; 21   0.7341974     0.0026447368 Otu00043     rf              AUC   NA
+#&gt; 22   0.7412895    -0.0044473684 Otu00036     rf              AUC   NA
+#&gt; 23   0.7457895    -0.0089473684 Otu00041     rf              AUC   NA
+#&gt; 24   0.7400789    -0.0032368421 Otu00031     rf              AUC   NA
+#&gt; 25   0.7405395    -0.0036973684 Otu00048     rf              AUC   NA
+#&gt; 26   0.7354868     0.0013552632 Otu00060     rf              AUC   NA
+#&gt; 27   0.7382237    -0.0013815789 Otu00028     rf              AUC   NA
+#&gt; 28   0.7468158    -0.0099736842 Otu00001     rf              AUC   NA
+#&gt; 29   0.7351184     0.0017236842 Otu00014     rf              AUC   NA
+#&gt; 30   0.7378816    -0.0010394737 Otu00037     rf              AUC   NA
+#&gt; 31   0.7364079     0.0004342105 Otu00007     rf              AUC   NA
+#&gt; 32   0.7353947     0.0014473684 Otu00034     rf              AUC   NA
+#&gt; 33   0.7416053    -0.0047631579 Otu00006     rf              AUC   NA
+#&gt; 34   0.7343421     0.0025000000 Otu00029     rf              AUC   NA
+#&gt; 35   0.7371053    -0.0002631579 Otu00056     rf              AUC   NA
+#&gt; 36   0.7335395     0.0033026316 Otu00016     rf              AUC   NA
+#&gt; 37   0.7354474     0.0013947368 Otu00039     rf              AUC   NA
+#&gt; 38   0.7432368    -0.0063947368 Otu00027     rf              AUC   NA
+#&gt; 39   0.7309474     0.0058947368 Otu00038     rf              AUC   NA
+#&gt; 40   0.7447632    -0.0079210526 Otu00049     rf              AUC   NA
+#&gt; 41   0.7426711    -0.0058289474 Otu00024     rf              AUC   NA
+#&gt; 42   0.7423684    -0.0055263158 Otu00015     rf              AUC   NA
+#&gt; 43   0.7530000    -0.0161578947 Otu00032     rf              AUC   NA
+#&gt; 44   0.7424342    -0.0055921053 Otu00054     rf              AUC   NA
+#&gt; 45   0.7416184    -0.0047763158 Otu00022     rf              AUC   NA
+#&gt; 46   0.7125526     0.0242894737 Otu00010     rf              AUC   NA
+#&gt; 47   0.7138026     0.0230394737 Otu00018     rf              AUC   NA
+#&gt; 48   0.7350395     0.0018026316 Otu00059     rf              AUC   NA
+#&gt; 49   0.7065658     0.0302763158 Otu00033     rf              AUC   NA
+#&gt; 50   0.7362105     0.0006315789 Otu00002     rf              AUC   NA
+#&gt; 51   0.7340658     0.0027763158 Otu00021     rf              AUC   NA
+#&gt; 52   0.7285000     0.0083421053 Otu00053     rf              AUC   NA
+#&gt; 53   0.7312895     0.0055526316 Otu00004     rf              AUC   NA
+#&gt; 54   0.7364605     0.0003815789 Otu00051     rf              AUC   NA
+#&gt; 55   0.7449605    -0.0081184211 Otu00044     rf              AUC   NA
+#&gt; 56   0.7353158     0.0015263158 Otu00050     rf              AUC   NA
+#&gt; 57   0.7500921    -0.0132500000 Otu00013     rf              AUC   NA
+#&gt; 58   0.7353684     0.0014736842 Otu00040     rf              AUC   NA
+#&gt; 59   0.7419737    -0.0051315789 Otu00035     rf              AUC   NA
+#&gt; 60   0.7409211    -0.0040789474 Otu00011     rf              AUC   NA
+#&gt; </div><div class='input'><span class='co'># }</span>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

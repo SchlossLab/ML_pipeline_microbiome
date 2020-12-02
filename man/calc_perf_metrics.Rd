@@ -17,9 +17,15 @@ calc_perf_metrics(
 
 \item{trained_model}{Trained model from \code{\link[caret:train]{caret::train()}}.}
 
-\item{outcome_colname}{Column name as a string of the outcome variable (default \code{NULL}; the first column will be chosen automatically).}
+\item{outcome_colname}{Column name as a string of the outcome variable
+(default \code{NULL}; the first column will be chosen automatically).}
 
-\item{perf_metric_function}{Function to calculate the performance metric to be used for cross-validation and test performance. Some functions are provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}). Defaults: binary classification = \code{twoClassSummary}, multi-class classification = \code{multiClassSummary}, regression = \code{defaultSummary}.}
+\item{perf_metric_function}{Function to calculate the performance metric to
+be used for cross-validation and test performance. Some functions are
+provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}).
+Defaults: binary classification = \code{twoClassSummary},
+multi-class classification = \code{multiClassSummary},
+regression = \code{defaultSummary}.}
 
 \item{class_probs}{Whether to use class probabilities (TRUE for categorical outcomes, FALSE for numeric outcomes).}
 }
@@ -30,6 +36,7 @@ Dataframe of performance metrics.
 Get performance metrics for test data
 }
 \examples{
+\donttest{
 results <- run_ml(otu_small, "glmnet", kfold = 2, cv_times = 2)
 calc_perf_metrics(results$test_data,
   results$trained_model,
@@ -37,6 +44,7 @@ calc_perf_metrics(results$test_data,
   multiClassSummary,
   class_probs = TRUE
 )
+}
 }
 \author{
 Zena Lapp, \email{zenalapp@umich.edu}

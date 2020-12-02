@@ -2,10 +2,13 @@
 #' Identify correlated features
 #'
 #' @param features Features used for machine learning.
-#' @param group_neg_corr Whether to group negatively correlated features together (e.g. c(0,1) and c(1,0)).
+#' @param group_neg_corr Whether to group negatively correlated features
+#'   together (e.g. c(0,1) and c(1,0)).
 #' @inheritParams run_ml
 #'
-#' @return Dataframe of correlated features where the columns are feature1, feature2, and the correlation between those two features (anything exceeding corr_thresh).
+#' @return Dataframe of correlated features where the columns are feature1,
+#'   feature2, and the correlation between those two features
+#'   (anything exceeding corr_thresh).
 #' @export
 #' @author Begüm Topçuoğlu, \email{topcuoglu.begum@@gmail.com}
 #' @author Zena Lapp, \email{zenalapp@@umich.edu}
@@ -60,7 +63,8 @@ flatten_corr_mat <- function(cormat) {
 #' @param corr output of get_corr_feats (pairs of correlated features)
 #' @param features features for ML
 #'
-#' @return vector of correlated features where each element is the group of correlated features separated by pipes (|)
+#' @return vector of correlated features where each element is the group of
+#'   correlated features separated by pipes (|)
 #' @noRd
 #' @author Begüm Topçuoğlu, \email{topcuoglu.begum@@gmail.com}
 #' @author Zena Lapp, \email{zenalapp@@umich.edu}
@@ -76,12 +80,18 @@ group_correlated_features <- function(corr, features) {
   c <- length(grps) + 1
   for (i in corr_feats) {
     if (i %in% accounted_for) next
-    feats <- unique(c(i, corr$feature1[corr$feature2 == i], corr$feature2[corr$feature1 == i]))
+    feats <- unique(c(
+      i, corr$feature1[corr$feature2 == i],
+      corr$feature2[corr$feature1 == i]
+    ))
     new_feats <- T
     while (new_feats) {
       len_feats <- length(feats)
       for (j in feats) {
-        feats <- unique(c(feats, j, corr$feature1[corr$feature2 == j], corr$feature2[corr$feature1 == j]))
+        feats <- unique(c(
+          feats, j, corr$feature1[corr$feature2 == j],
+          corr$feature2[corr$feature1 == j]
+        ))
       }
       new_feats <- length(feats) > len_feats
     }

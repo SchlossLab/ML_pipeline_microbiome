@@ -3,8 +3,11 @@
 #'
 #' Function to preprocess your data for input into [run_ml()].
 #'
-#' @param method Methods to preprocess the data, described in [caret::preProcess()] (defaut: `c("center","scale")`, use `NULL` for no normalization).
-#' @param remove_var Whether to remove variables with near-zero variance (`'nzv'`; default), zero variance (`'zv'`), or none (`NULL`).
+#' @param method Methods to preprocess the data, described in
+#'   [caret::preProcess()] (default: `c("center","scale")`, use `NULL` for
+#'   no normalization).
+#' @param remove_var Whether to remove variables with near-zero variance
+#'   (`'nzv'`; default), zero variance (`'zv'`), or none (`NULL`).
 #' @param collapse_corr_feats Whether to keep only one of perfectly correlated features.
 #' @param to_numeric Whether to change features to numeric where possible.
 #' @inheritParams run_ml

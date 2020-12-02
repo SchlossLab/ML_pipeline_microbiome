@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -167,15 +167,19 @@
     </tr>
     <tr>
       <th>outcome_colname</th>
-      <td><p>Column name as a string of the outcome variable (default <code>NULL</code>; the first column will be chosen automatically).</p></td>
+      <td><p>Column name as a string of the outcome variable
+(default <code>NULL</code>; the first column will be chosen automatically).</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>Methods to preprocess the data, described in <code><a href='https://rdrr.io/pkg/caret/man/preProcess.html'>caret::preProcess()</a></code> (defaut: <code><a href='https://rdrr.io/r/base/c.html'>c("center","scale")</a></code>, use <code>NULL</code> for no normalization).</p></td>
+      <td><p>Methods to preprocess the data, described in
+<code><a href='https://rdrr.io/pkg/caret/man/preProcess.html'>caret::preProcess()</a></code> (default: <code><a href='https://rdrr.io/r/base/c.html'>c("center","scale")</a></code>, use <code>NULL</code> for
+no normalization).</p></td>
     </tr>
     <tr>
       <th>remove_var</th>
-      <td><p>Whether to remove variables with near-zero variance (<code>'nzv'</code>; default), zero variance (<code>'zv'</code>), or none (<code>NULL</code>).</p></td>
+      <td><p>Whether to remove variables with near-zero variance
+(<code>'nzv'</code>; default), zero variance (<code>'zv'</code>), or none (<code>NULL</code>).</p></td>
     </tr>
     <tr>
       <th>collapse_corr_feats</th>
@@ -187,7 +191,8 @@
     </tr>
     <tr>
       <th>group_neg_corr</th>
-      <td><p>Whether to group negatively correlated features together (e.g. c(0,1) and c(1,0)).</p></td>
+      <td><p>Whether to group negatively correlated features
+together (e.g. c(0,1) and c(1,0)).</p></td>
     </tr>
     </table>
 
@@ -204,7 +209,8 @@
     
 
 
-<p>For more details, please see the <a href='http://www.schlosslab.org/mikropml/articles/preprocess.html'>preprocessing vignette</a>.</p>
+<p>See the <a href='http://www.schlosslab.org/mikropml/articles/preprocess.html'>preprocessing vignette</a>
+for more details.</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Zena Lapp, <a href='mailto:zenalapp@umich.edu'>zenalapp@umich.edu</a></p>

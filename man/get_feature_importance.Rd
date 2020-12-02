@@ -24,31 +24,57 @@ get_feature_importance(
 
 \item{test_data}{Held out test data: dataframe of outcome and features.}
 
-\item{outcome_colname}{Column name as a string of the outcome variable (default \code{NULL}; the first column will be chosen automatically).}
+\item{outcome_colname}{Column name as a string of the outcome variable
+(default \code{NULL}; the first column will be chosen automatically).}
 
-\item{perf_metric_function}{Function to calculate the performance metric to be used for cross-validation and test performance. Some functions are provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}). Defaults: binary classification = \code{twoClassSummary}, multi-class classification = \code{multiClassSummary}, regression = \code{defaultSummary}.}
+\item{perf_metric_function}{Function to calculate the performance metric to
+be used for cross-validation and test performance. Some functions are
+provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}).
+Defaults: binary classification = \code{twoClassSummary},
+multi-class classification = \code{multiClassSummary},
+regression = \code{defaultSummary}.}
 
-\item{perf_metric_name}{The column name from the output of the function provided to perf_metric_function that is to be used as the performance metric. Defaults: binary classification = \code{"ROC"}, multi-class classification = \code{"logLoss"}, regression = \code{"RMSE"}.}
+\item{perf_metric_name}{The column name from the output of the function
+provided to perf_metric_function that is to be used as the performance metric.
+Defaults: binary classification = \code{"ROC"},
+multi-class classification = \code{"logLoss"},
+regression = \code{"RMSE"}.}
 
 \item{class_probs}{Whether to use class probabilities (TRUE for categorical outcomes, FALSE for numeric outcomes).}
 
-\item{method}{ML method. Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.}
+\item{method}{ML method.
+Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.
+\itemize{
+\item glmnet: linear, logistic, or multiclass regression
+\item rf: random forest
+\item rpart2: decision tree
+\item svmRadial: support vector machine
+\item xgbTree: xgboost
+}}
 
-\item{seed}{Random seed (default: \code{NA}). Your results will be reproducible if you set a seed.}
+\item{seed}{Random seed (default: \code{NA}).
+Your results will only be reproducible if you set a seed.}
 
-\item{corr_thresh}{For feature importance, group correlations above or equal to corr_thresh (default: \code{1}).}
+\item{corr_thresh}{For feature importance, group correlations
+above or equal to \code{corr_thresh} (range \code{0} to \code{1}; default: \code{1}).}
 }
 \value{
-Dataframe with performance metrics for when each feature (or group of correlated features; \code{names}) is permuted (\code{perf_metric}), and differences between test performance metric and permuted performance metric (\code{perf_metric_diff}). The performance metric name (\code{perf_metric_name}) and seed (\code{seed}) are also returned.
+Dataframe with performance metrics for when each feature (or group of
+correlated features; \code{names}) is permuted (\code{perf_metric}), and differences
+between test performance metric and permuted performance metric
+(\code{perf_metric_diff}). The performance metric name (\code{perf_metric_name}) and
+seed (\code{seed}) are also returned.
 }
 \description{
-Calculates feature importance using a trained model and test data. Requires the \code{future.apply} package.
+Calculates feature importance using a trained model and test data. Requires
+the \code{future.apply} package.
 }
 \examples{
-\dontrun{
+\donttest{
 results <- run_ml(otu_small, "glmnet", kfold = 2, cv_times = 2)
 names(results$trained_model$trainingData)[1] <- "dx"
-get_feature_importance(results$trained_model, results$trained_model$trainingData, results$test_data,
+get_feature_importance(results$trained_model,
+  results$trained_model$trainingData, results$test_data,
   "dx",
   multiClassSummary, "AUC",
   class_probs = TRUE, method = "glmnet"

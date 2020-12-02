@@ -11,7 +11,7 @@
 #' @author Kelly Sovacool, \email{sovacool@@umich.edu}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # call `run_ml()` multiple times with different seeds
 #' results_lst <- lapply(seq(100, 104), function(seed) {
 #'   run_ml(otu_small, "glmnet", seed = seed)
@@ -69,7 +69,7 @@ plot_model_performance <- function(performance_df) {
 #' @author Begüm Topçuoglu, \email{topcuoglu.begum@@gmail.com}
 #' @author Kelly Sovacool, \email{sovacool@@umich.edu}
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # call `run_ml()` multiple times with different seeds
 #' results_lst <- lapply(seq(100, 104), function(seed) {
 #'   run_ml(otu_small, "glmnet", seed = seed)
@@ -101,7 +101,7 @@ tidy_perf_data <- function(performance_df) {
     )))
 }
 
-#' Get hyperparameter peformance metrics
+#' Get hyperparameter performance metrics
 #'
 #' @param trained_model trained model (e.g. from `run_ml()`)
 #'
@@ -151,7 +151,7 @@ get_hp_performance <- function(trained_model) {
 #' @author Zena Lapp, \email{zenalapp@@umich.edu}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' results <- lapply(seq(100, 102), function(seed) {
 #'   run_ml(otu_small, "glmnet", seed = seed, cv_times = 2, kfold = 2)
 #' })
@@ -188,7 +188,7 @@ combine_hp_performance <- function(trained_model_lst) {
 #' hp_metrics <- get_hp_performance(otu_mini_bin_results_glmnet$trained_model)
 #' hp_metrics
 #' plot_hp_performance(hp_metrics$dat, lambda, AUC)
-#' \dontrun{
+#' \donttest{
 #' # plot for multiple `run_ml()` calls
 #' results <- lapply(seq(100, 102), function(seed) {
 #'   run_ml(otu_small, "glmnet", seed = seed)

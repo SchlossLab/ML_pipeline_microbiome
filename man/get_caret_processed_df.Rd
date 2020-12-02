@@ -9,7 +9,9 @@ get_caret_processed_df(features, method)
 \arguments{
 \item{features}{Dataframe of features for machine learning}
 
-\item{method}{Methods to preprocess the data, described in \code{\link[caret:preProcess]{caret::preProcess()}} (defaut: \code{c("center","scale")}, use \code{NULL} for no normalization).}
+\item{method}{Methods to preprocess the data, described in
+\code{\link[caret:preProcess]{caret::preProcess()}} (default: \code{c("center","scale")}, use \code{NULL} for
+no normalization).}
 }
 \value{
 Named list:

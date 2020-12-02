@@ -16,7 +16,9 @@ knitr::opts_chunk$set(
 ```
 
 One particularly important aspect of machine learning (ML) is hyperparameter tuning. 
-We must explore a range of hyperparameter possibilities to pick the ideal value for the model and dataset. 
+A hyperparameter is a parameter that is set before the ML training begins. 
+These parameters are tunable and they effect how well the model trains.
+We must do a grid search for many hyperparameter possibilities and exhaust our search to pick the ideal value for the model and dataset. 
 In this package, we do this during the cross-validation step.
 
 Let's start with an example ML run. 
@@ -71,9 +73,9 @@ results$trained_model
 As you can see, the `alpha` hyperparameter is set to 0, which specifies L2 regularization.
 `glmnet` gives us the option to run both L1 and L2 regularization.
 If we change `alpha` to 1, we would run L1-regularized logistic regression. 
-You can also tune `alpha` by specifying a variety of values between 0 and 1, inclusive. 
+You can also tune `alpha` by specifying a variety of values between 0 and 1. 
 When you use a value that is between 0 and 1, you are running elastic net.
-The default hyperparameter `lambda` which adjusts the L2 regularization penalty is a range of values between 10^4 to 10. 
+The default hyperparameter `lambda` which adjusts the L2 regularization penalty is a range of values between 10^-4 to 10. 
 
 When we look at the 100 repeated cross-validation performance metrics such as 
 `AUC`, `Accuracy`, `prAUC` for each tested `lambda` value, 
@@ -92,7 +94,7 @@ For example:
 
 ```{r}
 new_hp <- list(alpha = 1, 
-               lambda = c(0.01, 0.015, 0.02, 0.025, 0.03, 0.04, 0.05, 0.06))
+               lambda = c(0.00001, 0.0001, 0.001, 0.01, 0.015, 0.02, 0.025, 0.03, 0.04, 0.05, 0.06, 0.1))
 new_hp
 ```
 
@@ -109,15 +111,18 @@ results <- run_ml(dat,
 results$trained_model
 ```
 
-This time, we cover a different range of `lambda` settings in cross-validation. 
+This time, we cover a larger and different range of `lambda` settings in cross-validation. 
 
 How do we know which `lambda` value is the best one? 
 To answer that, we need to run the ML pipeline on multiple data splits 
 and look at the mean cross-validation performance of each `lambda` across those modeling experiments. 
 We describe how to run ML with multiple data splits in `vignette("parallel")`.
 
-Here we run ML on 3 data splits with the new `lambda` range we defined above. 
+Here we run ML with the new `lambda` range we defined above. 
+We run it 3 times each with a different seed, which will result in different
+splits of the data into training and testing sets.
 We can then use `plot_hp_performance` to see which `lambda` gives us the largest mean AUC value across modeling experiments. 
+
 
 ```{r, warning = FALSE}
 results <- lapply(seq(100, 102), function(seed) {
@@ -128,7 +133,17 @@ hp_metrics <- combine_hp_performance(models)
 plot_hp_performance(hp_metrics$dat, lambda, AUC)
 ```
 
-As you can see, we get a mean maxima at 0.3 which is the best `lambda` value for this dataset when we run 3 datasplits. This value is used for building the final model. For a better understanding of the global maxima, it would be better to run more datasplits. 
+As you can see, we get a mean maxima at `0.03` which is the best `lambda` value 
+for this dataset when we run 3 data splits. 
+The fact that we are seeing this maxima in the middle of our range and not at the edges, 
+shows that we are providing a large enough range to exhaust our `lambda` search 
+as we build the model.
+We recommend the user to use this plot to make sure the best hyperparameter 
+is not on the edges of the provided list. 
+For a better understanding of the global maxima, 
+it would be better to run more data splits by using more seeds. 
+We picked 3 seeds to keep the runtime down for this vignette,
+but for real-world data we recommend using many more seeds.
 
 ## Hyperparameter options
 
@@ -150,6 +165,10 @@ As mentioned above, `glmnet` uses the `alpha` parameter and `lambda` hyperparame
 `alpha` of `0` is for L2 regularization (ridge).
 `alpha` of `1` is for L1 regularization (lasso).
 `alpha` in between is elastic net. You can also tune `alpha` like you would any other hyperparameter. 
+
+Please refer to original `glmnet` documentation for more information:
+https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html
+
 The default hyperparameters chosen by `run_ml()` are fixed for `glmnet`.
 
 ```{r, echo = FALSE}
@@ -158,9 +177,12 @@ mikropml:::set_hparams_glmnet()
 
 ### Random forest
 
-When we run the `rf` method, we are tuning the `mtry` hyperparameter. 
+When we run `rf` we are using the the `randomForest` package implementation.
+We are tuning the `mtry` hyperparameter. 
 This is the number of features that are randomly collected to be sampled at each tree node. 
-It needs to be an appropriate number in relation to the number of features in the dataset.
+This number needs to be less than the number of features in the dataset.
+Please refer to the original documentation for more information:
+https://cran.r-project.org/web/packages/randomForest/randomForest.pdf
 
 By default, we take the square root of number of features in the dataset 
 and we provide a range that is `[sqrt_features / 2, sqrt_features, sqrt_features * 2]`. 
@@ -175,8 +197,11 @@ Similar to `glmnet` method, we can provide our own `mtry` range.
 
 ### Decision tree
 
-When we run the `rpart2` method, we are tuning the `maxdepth` hyperparameter. 
+When we run `rpart2`, we are running the `rpart` package implementation of decision tree.
+We are tuning the `maxdepth` hyperparameter. 
 This is the maximum depth of any node of the final tree.
+Please refer to the original documentation for more information on maxdepth:
+https://cran.r-project.org/web/packages/rpart/rpart.pdf
 
 By default, we provide a range that is less than the number of features in the dataset. 
 
@@ -193,10 +218,12 @@ mikropml:::set_hparams_rpart2(10)
 ```
 
 
-### SVM
+### SVM with radial basis kernel
 
 When we run the `svmRadial` method, we are tuning the `C` and `sigma` hyperparameters. 
 `sigma` defines how far the influence of a single training example reaches and `C` behaves as a regularization parameter.
+Please refer to this great `sklearn` resource for more information on these hyperparameters:
+https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html
 
 By default, we provide 2 separate range of values for the two hyperparameters. 
 
@@ -208,7 +235,9 @@ mikropml:::set_hparams_svmRadial()
 
 When we run the `xgbTree` method, we are tuning the 
 `nrounds`, `gamma`, `eta` `max_depth`, `colsample_bytree`, `min_child_weight` and `subsample` hyperparameters. 
-Like other tree-based methods some of these hyperparameters need to be appropriate in relation to the number of features in the dataset.
+
+You can read more about these hyperparameters here:
+https://xgboost.readthedocs.io/en/latest/parameter.html
 
 By default, we set the `nrounds`, `gamma`, `colsample_bytree` and `min_child_weight` 
 to fixed values and we provide a range of values for `eta`, `max_depth` and `subsample`. 

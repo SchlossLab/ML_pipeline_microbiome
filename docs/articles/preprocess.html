@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
 <li class="divider">
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Vignettes</li>
@@ -95,7 +95,7 @@
 
       
 
-      </header><link href="preprocess_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+      </header><script src="preprocess_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="preprocess_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="preprocess_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -132,14 +132,14 @@
 <a href="#examples" class="anchor"></a>Examples</h1>
 <p>We’re going to start off simple and get more complicated, but if you want the whole shebang at once, just scroll to the bottom.</p>
 <p>First, we have to load <code>mikropml</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.schlosslab.org/mikropml/">mikropml</a></span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.schlosslab.org/mikropml/">mikropml</a></span><span class="op">)</span></code></pre></div>
 <div id="binary-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#binary-data" class="anchor"></a>Binary data</h2>
 <p>Let’s start with only binary variables:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># raw binary dataset</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw binary dataset</span>
 <span class="va">bin_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"yes"</span>, <span class="st">"no"</span><span class="op">)</span>,
@@ -150,10 +150,10 @@
 <span class="co">#&gt;   outcome var1 var2 var3</span>
 <span class="co">#&gt; 1  normal   no    0    a</span>
 <span class="co">#&gt; 2  normal  yes    1    a</span>
-<span class="co">#&gt; 3  cancer   no    1    b</span></pre></div>
+<span class="co">#&gt; 3  cancer   no    1    b</span></code></pre></div>
 <p>In addition to the dataframe itself, you have to provide the name of the outcome column to <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code>. Here’s what the preprocessed data looks like:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="co"># preprocess raw binary data</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw binary data</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">bin_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -168,16 +168,16 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
-<p>The output is a list of length two: <code>dat_transformed</code> which has the transformed data, and <code>grp_feats</code> which is a list of grouped features. Here, <code>grp_feats</code> is <code>NULL</code> because there are no perfectly correlated features (e.g. <code><a href="https://rdrr.io/r/base/c.html">c(0,1,0)</a></code> and <code><a href="https://rdrr.io/r/base/c.html">c(0,1,0)</a></code>, or <code><a href="https://rdrr.io/r/base/c.html">c(0,1,0)</a></code> and <code><a href="https://rdrr.io/r/base/c.html">c(1,0,1)</a></code> - see below for more details).</p>
+<span class="co">#&gt; character(0)</span></code></pre></div>
+<p>The output is a list: <code>dat_transformed</code> which has the transformed data, <code>grp_feats</code> which is a list of grouped features, and <code>removed_feats</code> which is a list of featuures that were removed. Here, <code>grp_feats</code> is <code>NULL</code> because there are no perfectly correlated features (e.g. <code><a href="https://rdrr.io/r/base/c.html">c(0,1,0)</a></code> and <code><a href="https://rdrr.io/r/base/c.html">c(0,1,0)</a></code>, or <code><a href="https://rdrr.io/r/base/c.html">c(0,1,0)</a></code> and <code><a href="https://rdrr.io/r/base/c.html">c(1,0,1)</a></code> - see below for more details).</p>
 <p>The first column (<code>var1</code>) in <code>dat_transformed</code> is a character and is changed to <code>var1_yes</code> that has zeros (no) and ones (yes). The values in the second column (<code>var2</code>) stay the same because it’s already binary, but the name changes to <code>var2_1</code>. The third column (<code>var3</code>) is a factor and is also changed to binary where b is 1 and a is 0, as denoted by the new column name <code>var3_b</code>.</p>
 </div>
 <div id="categorical-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#categorical-data" class="anchor"></a>Categorical data</h2>
 <p>On to non-binary categorical data:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># raw categorical dataset</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw categorical dataset</span>
 <span class="va">cat_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'a'</span>,<span class="st">'b'</span>,<span class="st">'c'</span><span class="op">)</span>
@@ -186,9 +186,9 @@
 <span class="co">#&gt;   outcome var1</span>
 <span class="co">#&gt; 1  normal    a</span>
 <span class="co">#&gt; 2  normal    b</span>
-<span class="co">#&gt; 3  cancer    c</span></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># preprocess raw categorical data</span>
+<span class="co">#&gt; 3  cancer    c</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw categorical data</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">cat_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -203,15 +203,15 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 <p>As you can see, this variable was split into 3 different columns - one for each type (a, b, and c). And again, <code>grp_feats</code> is <code>NULL</code>.</p>
 </div>
 <div id="continuous-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#continuous-data" class="anchor"></a>Continuous data</h2>
 <p>Now, looking at continuous variables:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co"># raw continuous dataset</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw continuous dataset</span>
 <span class="va">cont_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>
@@ -220,9 +220,9 @@
 <span class="co">#&gt;   outcome var1</span>
 <span class="co">#&gt; 1  normal    1</span>
 <span class="co">#&gt; 2  normal    2</span>
-<span class="co">#&gt; 3  cancer    3</span></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co"># preprocess raw continuous data</span>
+<span class="co">#&gt; 3  cancer    3</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw continuous data</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">cont_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -237,29 +237,15 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
-<p>Wow! Why did the numbers change? This is because the default is to normalize the data using <code><a href="https://rdrr.io/r/base/c.html">c("center","scale")</a></code>. While this is often best practice, you may not want to normalize the data, or you may want to normalize the data in a different way. If you don’t want to normalize the data, you can use <code>method=NULL</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="co"># preprocess raw continuous data, no normalization</span>
-<span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">cont_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, method <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="co">#&gt; Using 'outcome' as the outcome column.</span>
-<span class="co">#&gt; $dat_transformed</span>
-<span class="co">#&gt; # A tibble: 3 x 2</span>
-<span class="co">#&gt;   outcome  var1</span>
-<span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 normal      1</span>
-<span class="co">#&gt; 2 normal      2</span>
-<span class="co">#&gt; 3 cancer      3</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $grp_feats</span>
-<span class="co">#&gt; NULL</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
-<p>You can also normalize the data in different ways. You can implement any method used by the <code><a href="https://rdrr.io/pkg/caret/man/preProcess.html">caret::preProcess()</a></code> function (the <code>method</code> argument). Note that these methods are only applied to continuous variables.</p>
+<span class="co">#&gt; character(0)</span></code></pre></div>
+<p>Wow! Why did the numbers change? This is because the default is to normalize the data using <code>"center"</code> and <code>"scale"</code>. While this is often best practice, you may not want to normalize the data, or you may want to normalize the data in a different way. If you don’t want to normalize the data, you can use <code>method=NULL</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw continuous data, no normalization</span>
+<span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">cont_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, method <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+<p>You can also normalize the data in different ways. You can choose any method supported by the <code>method</code> argument of <code><a href="https://rdrr.io/pkg/caret/man/preProcess.html">caret::preProcess()</a></code> (see the <code><a href="https://rdrr.io/pkg/caret/man/preProcess.html">caret::preProcess()</a></code> docs for details). Note that these methods are only applied to continuous variables.</p>
 <p>Another feature of <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> is that if you provide continuous variables as characters, they will be converted to numeric:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="co"># raw continuous dataset as characters</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw continuous dataset as characters</span>
 <span class="va">cont_char_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1"</span>,<span class="st">"2"</span>,<span class="st">"3"</span><span class="op">)</span>
@@ -268,27 +254,13 @@
 <span class="co">#&gt;   outcome var1</span>
 <span class="co">#&gt; 1  normal    1</span>
 <span class="co">#&gt; 2  normal    2</span>
-<span class="co">#&gt; 3  cancer    3</span></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="co"># preprocess raw continuous character data as numeric</span>
-<span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">cont_char_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
-<span class="co">#&gt; Using 'outcome' as the outcome column.</span>
-<span class="co">#&gt; $dat_transformed</span>
-<span class="co">#&gt; # A tibble: 3 x 2</span>
-<span class="co">#&gt;   outcome  var1</span>
-<span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 normal     -1</span>
-<span class="co">#&gt; 2 normal      0</span>
-<span class="co">#&gt; 3 cancer      1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $grp_feats</span>
-<span class="co">#&gt; NULL</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; 3  cancer    3</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw continuous character data as numeric</span>
+<span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">cont_char_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></code></pre></div>
 <p>If you don’t want this to happen, and you want character data to remain character data even if it can be converted to numeric, you can use <code>to_numeric=FALSE</code> and they will be kept as categorical:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="co"># preprocess raw continuous character data as characters</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw continuous character data as characters</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">cont_char_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, to_numeric <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -303,15 +275,15 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 <p>As you can see from this output, in this case the features are treated as groups rather than numbers (e.g. they are not normalized).</p>
 </div>
 <div id="collapse-perfectly-correlated-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#collapse-perfectly-correlated-features" class="anchor"></a>Collapse perfectly correlated features</h2>
-<p>By default, <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> collapses features that are perfectly positively or negatively correlated. This is because having multiple copies of those feautres does not add information to machine learning, and it makes <code>run_ml</code> faster.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="co"># raw correlated dataset</span>
+<p>By default, <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> collapses features that are perfectly positively or negatively correlated. This is because having multiple copies of those features does not add information to machine learning, and it makes <code>run_ml</code> faster.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw correlated dataset</span>
 <span class="va">corr_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"yes"</span>, <span class="st">"no"</span><span class="op">)</span>,
@@ -322,9 +294,9 @@
 <span class="co">#&gt;   outcome var1 var2 var3</span>
 <span class="co">#&gt; 1  normal   no    0    1</span>
 <span class="co">#&gt; 2  normal  yes    1    0</span>
-<span class="co">#&gt; 3  cancer   no    0    1</span></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="co"># preprocess raw correlated dataset</span>
+<span class="co">#&gt; 3  cancer   no    0    1</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw correlated dataset</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">corr_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -341,11 +313,11 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 <p>As you can see, we end up with only one variable, as all 3 are grouped together. Also, the second element in the list is no longer <code>NULL</code>. Instead, it tells you that <code>grp1</code> contains <code>var1</code>, <code>var2</code>, and <code>var3</code>.</p>
 <p>If you want to group positively correlated features, but not negatively correlated features (e.g. for interpretability, or another downstream application), you can do that by using <code>group_neg_corr=FALSE</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="co"># preprocess raw correlated dataset; don't group negatively correlated features</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw correlated dataset; don't group negatively correlated features</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">corr_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, group_neg_corr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -365,10 +337,10 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 <p>Here, <code>var3</code> is kept on it’s own because it’s negatively correlated with <code>var1</code> and <code>var2</code>. You can also choose to keep all features separate, even if they are perfectly correlated, by using <code>collapse_corr_feats=FALSE</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="co"># preprocess raw correlated dataset; don't group negatively correlated features</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw correlated dataset; don't group negatively correlated features</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">corr_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, collapse_corr_feats <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -383,15 +355,15 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 <p>In this case, <code>grp_feats</code> will always be <code>NULL</code>.</p>
 </div>
 <div id="data-with-near-zero-variance" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-with-near-zero-variance" class="anchor"></a>Data with near-zero variance</h2>
 <p>What if we have variables that are all zero, or all “no”? Those ones won’t contribute any information, so we remove them:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="co"># raw dataset with non-variable features</span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw dataset with non-variable features</span>
 <span class="va">nonvar_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"yes"</span>, <span class="st">"no"</span><span class="op">)</span>,
@@ -404,10 +376,10 @@
 <span class="co">#&gt;   outcome var1 var2 var3 var4 var5</span>
 <span class="co">#&gt; 1  normal   no    0   no    0   12</span>
 <span class="co">#&gt; 2  normal  yes    1   no    0   12</span>
-<span class="co">#&gt; 3  cancer   no    1   no    0   12</span></pre></div>
+<span class="co">#&gt; 3  cancer   no    1   no    0   12</span></code></pre></div>
 <p>Here, <code>var3</code>, <code>var4</code>, and <code>var5</code> all have no variability, so these variables are removed during preprocessing:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="co"># remove features with near-zero variance</span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># remove features with near-zero variance</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">nonvar_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -422,10 +394,10 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; [1] "var3" "var4" "var5"</span></pre></div>
+<span class="co">#&gt; [1] "var3" "var4" "var5"</span></code></pre></div>
 <p>You can read the <code><a href="https://rdrr.io/pkg/caret/man/preProcess.html">caret::preProcess()</a></code> documentation for more information. By default, we remove features with “near-zero variance” (<code>remove_var='nzv'</code>). This uses the default arguments from <code><a href="https://rdrr.io/pkg/caret/man/nearZeroVar.html">caret::nearZeroVar()</a></code>. However, particularly with smaller datasets, you might not want to remove features with near-zero variance. If you want to remove only features with zero variance, you can use <code>remove_var='zv'</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="co"># remove features with zero variance</span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># remove features with zero variance</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">nonvar_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, remove_var <span class="op">=</span> <span class="st">'zv'</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -440,10 +412,10 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; [1] "var3" "var4" "var5"</span></pre></div>
+<span class="co">#&gt; [1] "var3" "var4" "var5"</span></code></pre></div>
 <p>If you want to include all features, you can use the argument <code>remove_zv=NULL</code>. For this to work, you cannot collapse correlated features (otherwise it errors out because of the underlying <code>caret</code> function we use).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="co"># don't remove features with near-zero or zero variance</span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># don't remove features with near-zero or zero variance</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">nonvar_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, remove_var <span class="op">=</span> <span class="cn">NULL</span>, collapse_corr_feats <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; $dat_transformed</span>
@@ -458,7 +430,7 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; NULL</span></pre></div>
+<span class="co">#&gt; NULL</span></code></pre></div>
 <p>If you want to be more nuanced in how you remove near-zero variance features (e.g. change the default 10% cutoff for the percentage of distinct values out of the total number of samples), you can use the <code><a href="https://rdrr.io/pkg/caret/man/preProcess.html">caret::preProcess()</a></code> function after running <code>preprocess_data</code> with <code>remove_var=NULL</code> (see the <code><a href="https://rdrr.io/pkg/caret/man/nearZeroVar.html">caret::nearZeroVar()</a></code> function for more information).</p>
 </div>
 <div id="missing-data" class="section level2">
@@ -475,8 +447,8 @@
 <div id="remove-missing-outcome-variables" class="section level3">
 <h3 class="hasAnchor">
 <a href="#remove-missing-outcome-variables" class="anchor"></a>Remove missing outcome variables</h3>
-<div class="sourceCode" id="cb20"><pre class="downlit">
-<span class="co"># raw dataset with missing outcome value</span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw dataset with missing outcome value</span>
 <span class="va">miss_oc_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span>,<span class="cn">NA</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"yes"</span>, <span class="st">"no"</span>,<span class="st">"no"</span><span class="op">)</span>,
@@ -487,9 +459,9 @@
 <span class="co">#&gt; 1  normal   no    0</span>
 <span class="co">#&gt; 2  normal  yes    1</span>
 <span class="co">#&gt; 3  cancer   no    1</span>
-<span class="co">#&gt; 4    &lt;NA&gt;   no    1</span></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit">
-<span class="co"># preprocess raw dataset with missing outcome value</span>
+<span class="co">#&gt; 4    &lt;NA&gt;   no    1</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw dataset with missing outcome value</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miss_oc_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; Removed 1/4 (25%) of samples because of missing outcome value (NA).</span>
@@ -505,13 +477,13 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 </div>
 <div id="maintain-zero-variability-in-a-feature-if-it-already-has-no-variability" class="section level3">
 <h3 class="hasAnchor">
 <a href="#maintain-zero-variability-in-a-feature-if-it-already-has-no-variability" class="anchor"></a>Maintain zero variability in a feature if it already has no variability</h3>
-<div class="sourceCode" id="cb22"><pre class="downlit">
-<span class="co"># raw dataset with missing value in non-variable feature</span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw dataset with missing value in non-variable feature</span>
 <span class="va">miss_nonvar_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"yes"</span>, <span class="st">"no"</span><span class="op">)</span>,
@@ -521,9 +493,9 @@
 <span class="co">#&gt;   outcome var1 var2</span>
 <span class="co">#&gt; 1  normal   no   NA</span>
 <span class="co">#&gt; 2  normal  yes    1</span>
-<span class="co">#&gt; 3  cancer   no    1</span></pre></div>
-<div class="sourceCode" id="cb23"><pre class="downlit">
-<span class="co"># preprocess raw dataset with missing value in non-variable feature</span>
+<span class="co">#&gt; 3  cancer   no    1</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw dataset with missing value in non-variable feature</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miss_nonvar_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; There are 1 missing value(s) in features with no variation. Missing values were replaced with the non-varying value.</span>
@@ -539,10 +511,10 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; [1] "var2"</span></pre></div>
+<span class="co">#&gt; [1] "var2"</span></code></pre></div>
 <p>Here, the non-variable feature with missing data is removed because we removed features with near-zero variance. If we maintained that feature, it’d be all ones:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit">
-<span class="co"># preprocess raw dataset with missing value in non-variable feature</span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw dataset with missing value in non-variable feature</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miss_nonvar_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, remove_var <span class="op">=</span> <span class="cn">NULL</span>, collapse_corr_feats <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; There are 1 missing value(s) in features with no variation. Missing values were replaced with the non-varying value.</span>
@@ -558,13 +530,13 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; NULL</span></pre></div>
+<span class="co">#&gt; NULL</span></code></pre></div>
 </div>
 <div id="replace-missing-binary-and-categorical-variables-with-zero" class="section level3">
 <h3 class="hasAnchor">
 <a href="#replace-missing-binary-and-categorical-variables-with-zero" class="anchor"></a>Replace missing binary and categorical variables with zero</h3>
-<div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="co"># raw dataset with missing value in categorical feature</span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw dataset with missing value in categorical feature</span>
 <span class="va">miss_cat_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"no"</span>, <span class="st">"yes"</span>, <span class="cn">NA</span><span class="op">)</span>,
@@ -574,9 +546,9 @@
 <span class="co">#&gt;   outcome var1 var2</span>
 <span class="co">#&gt; 1  normal   no   NA</span>
 <span class="co">#&gt; 2  normal  yes    1</span>
-<span class="co">#&gt; 3  cancer &lt;NA&gt;    0</span></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit">
-<span class="co"># preprocess raw dataset with missing value in non-variable feature</span>
+<span class="co">#&gt; 3  cancer &lt;NA&gt;    0</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw dataset with missing value in non-variable feature</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miss_cat_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; 4 categorical missing value(s) (NA) were replaced with 0. Note that the matrix is not full rank so missing values may be duplicated in separate columns.</span>
@@ -600,14 +572,14 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 <p>Here each binary variable is split into two, and the missing value is considered zero for both of them.</p>
 </div>
 <div id="replace-missing-continuous-data-with-the-median-value-of-that-feature" class="section level3">
 <h3 class="hasAnchor">
 <a href="#replace-missing-continuous-data-with-the-median-value-of-that-feature" class="anchor"></a>Replace missing continuous data with the median value of that feature</h3>
-<div class="sourceCode" id="cb27"><pre class="downlit">
-<span class="co"># raw dataset with missing value in continuous feature</span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># raw dataset with missing value in continuous feature</span>
 <span class="va">miss_cont_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span>,<span class="st">"normal"</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">2</span>,<span class="cn">NA</span><span class="op">)</span>,
@@ -618,10 +590,10 @@
 <span class="co">#&gt; 1  normal    1    1</span>
 <span class="co">#&gt; 2  normal    2    2</span>
 <span class="co">#&gt; 3  cancer    2    3</span>
-<span class="co">#&gt; 4  normal   NA   NA</span></pre></div>
+<span class="co">#&gt; 4  normal   NA   NA</span></code></pre></div>
 <p>Here we’re not normalizing continuous features so it’s easier to see what’s going on (i.e. the median value is used):</p>
-<div class="sourceCode" id="cb28"><pre class="downlit">
-<span class="co"># preprocess raw dataset with missing value in continuous feature</span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># preprocess raw dataset with missing value in continuous feature</span>
 <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miss_cont_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span>, method <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; 2 missing continuous value(s) were imputed using the median value of the feature.</span>
@@ -638,15 +610,15 @@
 <span class="co">#&gt; NULL</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; character(0)</span></pre></div>
+<span class="co">#&gt; character(0)</span></code></pre></div>
 </div>
 </div>
 <div id="putting-it-all-together" class="section level2">
 <h2 class="hasAnchor">
 <a href="#putting-it-all-together" class="anchor"></a>Putting it all together</h2>
 <p>Here’s some more complicated example raw data that puts everything we discussed together:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit">
-<span class="va">test_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">test_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"normal"</span>, <span class="st">"cancer"</span>, <span class="cn">NA</span><span class="op">)</span>,
   var1 <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,
   var2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span>,
@@ -666,10 +638,10 @@
 <span class="co">#&gt; 1  normal    1    a   no    0    0   no    1    5 &lt;NA&gt;     1     1     1</span>
 <span class="co">#&gt; 2  normal    2    b  yes    1    0   no    1    6    x     0     1     2</span>
 <span class="co">#&gt; 3  cancer    3    c   no    0    0   no    0   NA    y    NA    NA     3</span>
-<span class="co">#&gt; 4    &lt;NA&gt;    4    d   no    0    0   no    0    7    z    NA    NA     4</span></pre></div>
+<span class="co">#&gt; 4    &lt;NA&gt;    4    d   no    0    0   no    0    7    z    NA    NA     4</span></code></pre></div>
 <p>Let’s throw this into the preprocessing function with the default values:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit">
-<span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">test_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">test_df</span>, outcome_colname <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span>
 <span class="co">#&gt; Using 'outcome' as the outcome column.</span>
 <span class="co">#&gt; Removed 1/4 (25%) of samples because of missing outcome value (NA).</span>
 <span class="co">#&gt; There are 1 missing value(s) in features with no variation. Missing values were replaced with the non-varying value.</span>
@@ -701,7 +673,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $removed_feats</span>
-<span class="co">#&gt; [1] "var5"  "var6"  "var11"</span></pre></div>
+<span class="co">#&gt; [1] "var5"  "var6"  "var11"</span></code></pre></div>
 <p>As you can see, we got several messages:</p>
 <ul>
 <li>One of the samples (row 4) was removed because the outcome value was missing.</li>

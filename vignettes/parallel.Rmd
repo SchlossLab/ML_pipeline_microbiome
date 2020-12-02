@@ -28,20 +28,21 @@ library(dplyr)
 ## Speed up single runs
 
 By default, `preprocess_data()` and `run_ml()` use only one process in series.
-If you'd like to parallelize various steps of the pipeline to make them run faster,
-install `foreach`, `future`, `future.apply`, and `doFuture`.
-Then, register a future plan prior to calling `preprocess_data()` and `run_ml()`:
+If you'd like to parallelize various steps of the pipeline to make them run
+faster, install `foreach`, `future`, `future.apply`, and `doFuture`. Then,
+register a future plan prior to calling `preprocess_data()` and `run_ml()`:
 
 ```{r register, eval = FALSE}
 doFuture::registerDoFuture()
 future::plan(future::multicore, workers = 2)
 ```
 
-Above, we used the `multicore` plan to split the work across 2 cores.
-See the [`future` documentation](https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html) 
-for more about picking the best plan for your use case.
-Notably, `multicore` does not work inside RStudio or on Windows;
-you will need to use `multisession` instead in those cases.
+Above, we used the `multicore` plan to split the work across 2 cores. See the
+[`future`
+documentation](https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html)
+for more about picking the best plan for your use case. Notably, `multicore`
+does not work inside RStudio or on Windows; you will need to use `multisession`
+instead in those cases.
 
 After registering a future plan, you can call `preprocess_data()` and `run_ml()`
 as usual, and they will run certain tasks in parallel.
@@ -53,10 +54,10 @@ result1 <- run_ml(otu_data_preproc, 'glmnet')
 
 ## Call `run_ml()` multiple times in parallel in R
 
-You can use functions from the `future.apply` package to call 
-`run_ml()` multiple times in parallel with different parameters.
-You will first need to run `future::plan()` as above if you haven't already.
-Then, call `run_ml()` with multiple seeds using `future_lapply()`:
+You can use functions from the `future.apply` package to call `run_ml()`
+multiple times in parallel with different parameters. You will first need to run
+`future::plan()` as above if you haven't already. Then, call `run_ml()` with
+multiple seeds using `future_lapply()`:
 
 ```{r multi_seeds}
 # NOTE: use more seeds for real-world data
@@ -65,15 +66,20 @@ results_multi <- future.apply::future_lapply(seq(100, 102), function(seed) {
   }, future.seed = TRUE)
 ```
 
-Each call to `run_ml()` with a different seed uses a different random split 
-of the data into training and testing sets.
-Since we are using seeds, we must set `future.seed` to `TRUE` 
-(see the [`future.apply` documentation](https://cran.r-project.org/web/packages/future.apply/future.apply.pdf) 
-and [this blog post](https://www.r-bloggers.com/2020/09/future-1-19-1-making-sure-proper-random-numbers-are-produced-in-parallel-processing/)
-for details on parallel-safe random seeds).
-This example uses only a few seeds for speed and simplicity,
-but for real data we recommend using many more seeds to get a better estimate 
-of model performance.
+Each call to `run_ml()` with a different seed uses a different random split of
+the data into training and testing sets. Since we are using seeds, we must set
+`future.seed` to `TRUE` (see the [`future.apply`
+documentation](https://cran.r-project.org/web/packages/future.apply/future.apply.pdf)
+and [this blog
+post](https://www.r-bloggers.com/2020/09/future-1-19-1-making-sure-proper-random-numbers-are-produced-in-parallel-processing/)
+for details on parallel-safe random seeds). This example uses only a few seeds
+for speed and simplicity, but for real data we recommend using many more seeds
+to get a better estimate of model performance.
+
+In these examples, we used functions from the `future.apply` package to
+`run_ml()` in parallel, but you can accomplish the same thing with parallel
+versions of the `purrr::map()` functions using the `furrr` package (e.g.
+`furrr::future_map_dfr()`).
 
 Extract the performance results and combine into one dataframe for all seeds:
 
@@ -90,9 +96,9 @@ perf_df
 
 ### Multiple ML methods
 
-You may also wish to compare performance for different ML methods.
-`mapply()` can iterate over multiple lists or vectors, 
-and `future_mapply()` works the same way:
+You may also wish to compare performance for different ML methods. `mapply()`
+can iterate over multiple lists or vectors, and `future_mapply()` works the same
+way:
 
 ```{r multi_methods_seeds}
 # NOTE: use more seeds for real-world data
@@ -135,16 +141,16 @@ perf_boxplot +
    coord_flip()
 ```
 
-You can also create your own plots however you like using the performance results.
+You can also create your own plots however you like using the performance
+results.
 
 ## Parallelizing with Snakemake
 
-When parallelizing multiple calls to `run_ml()` in R as in the examples above, 
-all of the results objects are held in memory.
-This isn't a big deal for a small dataset run with only a few seeds.
-However, for large datasets run in parallel with, say, 100 seeds (recommended), 
-you may run into problems trying to store all of those objects in memory at once.
-One solution is to write the results files of each `run_ml()` call,
-then concatenate them at the end.
-We show one way to accomplish this with Snakemake in 
-[an example Snakemake workflow here](https://github.com/SchlossLab/mikropml-snakemake-workflow).
+When parallelizing multiple calls to `run_ml()` in R as in the examples above,
+all of the results objects are held in memory. This isn't a big deal for a small
+dataset run with only a few seeds. However, for large datasets run in parallel
+with, say, 100 seeds (recommended), you may run into problems trying to store
+all of those objects in memory at once. One solution is to write the results
+files of each `run_ml()` call, then concatenate them at the end. We show one way
+to accomplish this with Snakemake in [an example Snakemake workflow
+here](https://github.com/SchlossLab/mikropml-snakemake-workflow).

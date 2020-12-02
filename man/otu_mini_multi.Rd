@@ -6,7 +6,7 @@
 \title{Mini OTU abundance dataset with 3 categorical variables}
 \format{
 A data frame
-The \code{dx} column is the colorectal cancerl diagnosis: adenoma, carcinoma, normal.
+The \code{dx} column is the colorectal cancer diagnosis: adenoma, carcinoma, normal.
 All other columns are OTU relative abundances.
 }
 \usage{

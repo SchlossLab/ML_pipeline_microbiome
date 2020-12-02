@@ -20,17 +20,36 @@ get_performance_tbl(
 
 \item{test_data}{Held out test data: dataframe of outcome and features.}
 
-\item{outcome_colname}{Column name as a string of the outcome variable (default \code{NULL}; the first column will be chosen automatically).}
+\item{outcome_colname}{Column name as a string of the outcome variable
+(default \code{NULL}; the first column will be chosen automatically).}
 
-\item{perf_metric_function}{Function to calculate the performance metric to be used for cross-validation and test performance. Some functions are provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}). Defaults: binary classification = \code{twoClassSummary}, multi-class classification = \code{multiClassSummary}, regression = \code{defaultSummary}.}
+\item{perf_metric_function}{Function to calculate the performance metric to
+be used for cross-validation and test performance. Some functions are
+provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}).
+Defaults: binary classification = \code{twoClassSummary},
+multi-class classification = \code{multiClassSummary},
+regression = \code{defaultSummary}.}
 
-\item{perf_metric_name}{The column name from the output of the function provided to perf_metric_function that is to be used as the performance metric. Defaults: binary classification = \code{"ROC"}, multi-class classification = \code{"logLoss"}, regression = \code{"RMSE"}.}
+\item{perf_metric_name}{The column name from the output of the function
+provided to perf_metric_function that is to be used as the performance metric.
+Defaults: binary classification = \code{"ROC"},
+multi-class classification = \code{"logLoss"},
+regression = \code{"RMSE"}.}
 
 \item{class_probs}{Whether to use class probabilities (TRUE for categorical outcomes, FALSE for numeric outcomes).}
 
-\item{method}{ML method. Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.}
+\item{method}{ML method.
+Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.
+\itemize{
+\item glmnet: linear, logistic, or multiclass regression
+\item rf: random forest
+\item rpart2: decision tree
+\item svmRadial: support vector machine
+\item xgbTree: xgboost
+}}
 
-\item{seed}{Random seed (default: \code{NA}). Your results will be reproducible if you set a seed.}
+\item{seed}{Random seed (default: \code{NA}).
+Your results will only be reproducible if you set a seed.}
 }
 \value{
 A one-row tibble with columns \code{cv_auroc}, column for each of the performance metrics for the test data \code{method}, and \code{seed}.
@@ -40,13 +59,14 @@ Get model performance metrics as a one-row tibble
 }
 \examples{
 
-\dontrun{
+\donttest{
 results <- run_ml(otu_small, "glmnet", kfold = 2, cv_times = 2)
 names(results$trained_model$trainingData)[1] <- "dx"
 get_performance_tbl(results$trained_model, results$test_data,
   "dx",
   multiClassSummary, "AUC",
-  class_probs = TRUE
+  class_probs = TRUE,
+  method = 'glmnet'
 )
 }
 

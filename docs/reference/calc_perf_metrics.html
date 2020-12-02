@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -169,11 +169,17 @@
     </tr>
     <tr>
       <th>outcome_colname</th>
-      <td><p>Column name as a string of the outcome variable (default <code>NULL</code>; the first column will be chosen automatically).</p></td>
+      <td><p>Column name as a string of the outcome variable
+(default <code>NULL</code>; the first column will be chosen automatically).</p></td>
     </tr>
     <tr>
       <th>perf_metric_function</th>
-      <td><p>Function to calculate the performance metric to be used for cross-validation and test performance. Some functions are provided by caret (see <code><a href='https://rdrr.io/pkg/caret/man/postResample.html'>caret::defaultSummary()</a></code>). Defaults: binary classification = <code>twoClassSummary</code>, multi-class classification = <code>multiClassSummary</code>, regression = <code>defaultSummary</code>.</p></td>
+      <td><p>Function to calculate the performance metric to
+be used for cross-validation and test performance. Some functions are
+provided by caret (see <code><a href='https://rdrr.io/pkg/caret/man/postResample.html'>caret::defaultSummary()</a></code>).
+Defaults: binary classification = <code>twoClassSummary</code>,
+multi-class classification = <code>multiClassSummary</code>,
+regression = <code>defaultSummary</code>.</p></td>
     </tr>
     <tr>
       <th>class_probs</th>
@@ -189,7 +195,8 @@
     <p>Zena Lapp, <a href='mailto:zenalapp@umich.edu'>zenalapp@umich.edu</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>results</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_ml.html'>run_ml</a></span><span class='op'>(</span><span class='va'>otu_small</span>, <span class='st'>"glmnet"</span>, kfold <span class='op'>=</span> <span class='fl'>2</span>, cv_times <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='va'>results</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_ml.html'>run_ml</a></span><span class='op'>(</span><span class='va'>otu_small</span>, <span class='st'>"glmnet"</span>, kfold <span class='op'>=</span> <span class='fl'>2</span>, cv_times <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: lattice</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: ggplot2</span></div><div class='input'><span class='fu'>calc_perf_metrics</span><span class='op'>(</span><span class='va'>results</span><span class='op'>$</span><span class='va'>test_data</span>,
   <span class='va'>results</span><span class='op'>$</span><span class='va'>trained_model</span>,
   <span class='st'>"dx"</span>,
@@ -203,7 +210,8 @@
 #&gt;    Pos_Pred_Value    Neg_Pred_Value         Precision            Recall 
 #&gt;        0.53846154        0.53846154        0.53846154        0.70000000 
 #&gt;    Detection_Rate Balanced_Accuracy 
-#&gt;        0.35897436        0.53421053 </div></pre>
+#&gt;        0.35897436        0.53421053 </div><div class='input'><span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

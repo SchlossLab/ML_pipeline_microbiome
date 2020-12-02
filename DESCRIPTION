@@ -1,6 +1,6 @@
 Package: mikropml
-Title: User-Friendly R Package for Robust Machine Learning Pipelines
-Version: 0.0.1
+Title: User-Friendly R Package for Supervised Machine Learning Pipelines
+Version: 0.0.1.9000
 Authors@R: c(
     person(given = "Begüm",
            family = "Topçuoğlu",
@@ -38,14 +38,16 @@ Authors@R: c(
            role = c("ctb"),
            email = "nlesniak@umich.edu",
            comment = c(ORCID = "0000-0001-9359-5194")))
-Date: 2020-11-14
+Date: 2020-11-20
 URL: http://www.schlosslab.org/mikropml/, https://github.com/SchlossLab/mikropml
 BugReports: https://github.com/SchlossLab/mikropml/issues
 Description: An interface to build machine learning models for classification 
-    and regression problems. mikropml implements a robust ML pipeline with 
-    reasonable default options for data pre-processing, hyperparameter tuning, 
+    and regression problems. 'mikropml' implements the ML pipeline described
+    by Topçuoğlu et al. (2020) <doi:10.1128/mBio.00434-20> with reasonable 
+    default options for data preprocessing, hyperparameter tuning, 
     cross-validation, testing, model evaluation, and interpretation steps. 
-    See the website for more information, documentation, and examples.
+    See the website <http://www.schlosslab.org/mikropml/> for more information, 
+    documentation, and examples.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -54,27 +56,27 @@ RoxygenNote: 7.1.1
 Imports:
     caret,
     dplyr,
+    e1071,
+    glmnet,
+    kernlab,
+    MLmetrics,
+    randomForest,
     rlang,
+    rpart,
     stats,
-    utils
+    utils,
+    xgboost
 Suggests:
     doFuture,
-    e1071,
     foreach,
     future,
     future.apply,
-    glmnet,
     ggplot2,
-    kernlab,
     knitr,
-    MLmetrics,
     purrr,
-    randomForest,
     rmarkdown,
-    rpart,
     testthat,
-    tidyr,
-    xgboost
+    tidyr
 VignetteBuilder: knitr
 Depends:
     R (>= 2.10)

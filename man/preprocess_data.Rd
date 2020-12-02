@@ -17,17 +17,22 @@ preprocess_data(
 \arguments{
 \item{dataset}{Dataframe with an outcome variable and other columns as features.}
 
-\item{outcome_colname}{Column name as a string of the outcome variable (default \code{NULL}; the first column will be chosen automatically).}
+\item{outcome_colname}{Column name as a string of the outcome variable
+(default \code{NULL}; the first column will be chosen automatically).}
 
-\item{method}{Methods to preprocess the data, described in \code{\link[caret:preProcess]{caret::preProcess()}} (defaut: \code{c("center","scale")}, use \code{NULL} for no normalization).}
+\item{method}{Methods to preprocess the data, described in
+\code{\link[caret:preProcess]{caret::preProcess()}} (default: \code{c("center","scale")}, use \code{NULL} for
+no normalization).}
 
-\item{remove_var}{Whether to remove variables with near-zero variance (\code{'nzv'}; default), zero variance (\code{'zv'}), or none (\code{NULL}).}
+\item{remove_var}{Whether to remove variables with near-zero variance
+(\code{'nzv'}; default), zero variance (\code{'zv'}), or none (\code{NULL}).}
 
 \item{collapse_corr_feats}{Whether to keep only one of perfectly correlated features.}
 
 \item{to_numeric}{Whether to change features to numeric where possible.}
 
-\item{group_neg_corr}{Whether to group negatively correlated features together (e.g. c(0,1) and c(1,0)).}
+\item{group_neg_corr}{Whether to group negatively correlated features
+together (e.g. c(0,1) and c(1,0)).}
 }
 \value{
 Named list including:

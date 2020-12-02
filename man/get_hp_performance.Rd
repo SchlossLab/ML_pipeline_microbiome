@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{get_hp_performance}
 \alias{get_hp_performance}
-\title{Get hyperparameter peformance metrics}
+\title{Get hyperparameter performance metrics}
 \usage{
 get_hp_performance(trained_model)
 }
@@ -18,7 +18,7 @@ Named list:
 }
 }
 \description{
-Get hyperparameter peformance metrics
+Get hyperparameter performance metrics
 }
 \examples{
 get_hp_performance(otu_mini_bin_results_glmnet$trained_model)

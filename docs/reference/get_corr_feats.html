@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -159,17 +159,21 @@
     </tr>
     <tr>
       <th>corr_thresh</th>
-      <td><p>For feature importance, group correlations above or equal to corr_thresh (default: <code>1</code>).</p></td>
+      <td><p>For feature importance, group correlations
+above or equal to <code>corr_thresh</code> (range <code>0</code> to <code>1</code>; default: <code>1</code>).</p></td>
     </tr>
     <tr>
       <th>group_neg_corr</th>
-      <td><p>Whether to group negatively correlated features together (e.g. c(0,1) and c(1,0)).</p></td>
+      <td><p>Whether to group negatively correlated features
+together (e.g. c(0,1) and c(1,0)).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe of correlated features where the columns are feature1, feature2, and the correlation between those two features (anything exceeding corr_thresh).</p>
+    <p>Dataframe of correlated features where the columns are feature1,
+feature2, and the correlation between those two features
+(anything exceeding corr_thresh).</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Begüm Topçuoğlu, <a href='mailto:topcuoglu.begum@gmail.com'>topcuoglu.begum@gmail.com</a></p>

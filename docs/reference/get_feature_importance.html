@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Get feature importance using permutation method — get_feature_importance" />
-<meta property="og:description" content="Calculates feature importance using a trained model and test data. Requires the future.apply package." />
+<meta property="og:description" content="Calculates feature importance using a trained model and test data. Requires
+the future.apply package." />
 
 
 
@@ -72,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -97,7 +98,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -145,7 +146,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Calculates feature importance using a trained model and test data. Requires the <code>future.apply</code> package.</p>
+    <p>Calculates feature importance using a trained model and test data. Requires
+the <code>future.apply</code> package.</p>
     </div>
 
     <pre class="usage"><span class='fu'>get_feature_importance</span><span class='op'>(</span>
@@ -178,15 +180,25 @@
     </tr>
     <tr>
       <th>outcome_colname</th>
-      <td><p>Column name as a string of the outcome variable (default <code>NULL</code>; the first column will be chosen automatically).</p></td>
+      <td><p>Column name as a string of the outcome variable
+(default <code>NULL</code>; the first column will be chosen automatically).</p></td>
     </tr>
     <tr>
       <th>perf_metric_function</th>
-      <td><p>Function to calculate the performance metric to be used for cross-validation and test performance. Some functions are provided by caret (see <code><a href='https://rdrr.io/pkg/caret/man/postResample.html'>caret::defaultSummary()</a></code>). Defaults: binary classification = <code>twoClassSummary</code>, multi-class classification = <code>multiClassSummary</code>, regression = <code>defaultSummary</code>.</p></td>
+      <td><p>Function to calculate the performance metric to
+be used for cross-validation and test performance. Some functions are
+provided by caret (see <code><a href='https://rdrr.io/pkg/caret/man/postResample.html'>caret::defaultSummary()</a></code>).
+Defaults: binary classification = <code>twoClassSummary</code>,
+multi-class classification = <code>multiClassSummary</code>,
+regression = <code>defaultSummary</code>.</p></td>
     </tr>
     <tr>
       <th>perf_metric_name</th>
-      <td><p>The column name from the output of the function provided to perf_metric_function that is to be used as the performance metric. Defaults: binary classification = <code>"ROC"</code>, multi-class classification = <code>"logLoss"</code>, regression = <code>"RMSE"</code>.</p></td>
+      <td><p>The column name from the output of the function
+provided to perf_metric_function that is to be used as the performance metric.
+Defaults: binary classification = <code>"ROC"</code>,
+multi-class classification = <code>"logLoss"</code>,
+regression = <code>"RMSE"</code>.</p></td>
     </tr>
     <tr>
       <th>class_probs</th>
@@ -194,36 +206,110 @@
     </tr>
     <tr>
       <th>method</th>
-      <td><p>ML method. Options: <code><a href='https://rdrr.io/r/base/c.html'>c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")</a></code>.</p></td>
+      <td><p>ML method.
+Options: <code><a href='https://rdrr.io/r/base/c.html'>c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")</a></code>.</p><ul>
+<li><p>glmnet: linear, logistic, or multiclass regression</p></li>
+<li><p>rf: random forest</p></li>
+<li><p>rpart2: decision tree</p></li>
+<li><p>svmRadial: support vector machine</p></li>
+<li><p>xgbTree: xgboost</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>Random seed (default: <code>NA</code>). Your results will be reproducible if you set a seed.</p></td>
+      <td><p>Random seed (default: <code>NA</code>).
+Your results will only be reproducible if you set a seed.</p></td>
     </tr>
     <tr>
       <th>corr_thresh</th>
-      <td><p>For feature importance, group correlations above or equal to corr_thresh (default: <code>1</code>).</p></td>
+      <td><p>For feature importance, group correlations
+above or equal to <code>corr_thresh</code> (range <code>0</code> to <code>1</code>; default: <code>1</code>).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe with performance metrics for when each feature (or group of correlated features; <code>names</code>) is permuted (<code>perf_metric</code>), and differences between test performance metric and permuted performance metric (<code>perf_metric_diff</code>). The performance metric name (<code>perf_metric_name</code>) and seed (<code>seed</code>) are also returned.</p>
+    <p>Dataframe with performance metrics for when each feature (or group of
+correlated features; <code>names</code>) is permuted (<code>perf_metric</code>), and differences
+between test performance metric and permuted performance metric
+(<code>perf_metric_diff</code>). The performance metric name (<code>perf_metric_name</code>) and
+seed (<code>seed</code>) are also returned.</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Begüm Topçuoğlu, <a href='mailto:topcuoglu.begum@gmail.com'>topcuoglu.begum@gmail.com</a></p>
 <p>Zena Lapp, <a href='mailto:zenalapp@umich.edu'>zenalapp@umich.edu</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='va'>results</span> <span class='op'>&lt;-</span> <span class='fu'><a href='run_ml.html'>run_ml</a></span><span class='op'>(</span><span class='va'>otu_small</span>, <span class='st'>"glmnet"</span>, kfold <span class='op'>=</span> <span class='fl'>2</span>, cv_times <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>results</span><span class='op'>$</span><span class='va'>trained_model</span><span class='op'>$</span><span class='va'>trainingData</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>'dx'</span>
-<span class='fu'>get_feature_importance</span><span class='op'>(</span><span class='va'>results</span><span class='op'>$</span><span class='va'>trained_model</span>,<span class='va'>results</span><span class='op'>$</span><span class='va'>trained_model</span><span class='op'>$</span><span class='va'>trainingData</span>, <span class='va'>results</span><span class='op'>$</span><span class='va'>test_data</span>,
+</div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>results</span><span class='op'>$</span><span class='va'>trained_model</span><span class='op'>$</span><span class='va'>trainingData</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"dx"</span>
+<span class='fu'>get_feature_importance</span><span class='op'>(</span><span class='va'>results</span><span class='op'>$</span><span class='va'>trained_model</span>,
+  <span class='va'>results</span><span class='op'>$</span><span class='va'>trained_model</span><span class='op'>$</span><span class='va'>trainingData</span>, <span class='va'>results</span><span class='op'>$</span><span class='va'>test_data</span>,
   <span class='st'>"dx"</span>,
-  <span class='va'>multiClassSummary</span>, <span class='st'>'AUC'</span>,
-  class_probs <span class='op'>=</span> <span class='cn'>TRUE</span>, method <span class='op'>=</span> <span class='st'>'glmnet'</span>
+  <span class='va'>multiClassSummary</span>, <span class='st'>"AUC"</span>,
+  class_probs <span class='op'>=</span> <span class='cn'>TRUE</span>, method <span class='op'>=</span> <span class='st'>"glmnet"</span>
 <span class='op'>)</span>
-<span class='op'>}</span>
+</div><div class='output co'>#&gt;    perf_metric perf_metric_diff    names method perf_metric_name seed
+#&gt; 1    0.4400263    -0.0005526316 Otu00029 glmnet              AUC   NA
+#&gt; 2    0.4332368     0.0062368421 Otu00028 glmnet              AUC   NA
+#&gt; 3    0.4333684     0.0061052632 Otu00044 glmnet              AUC   NA
+#&gt; 4    0.4397895    -0.0003157895 Otu00048 glmnet              AUC   NA
+#&gt; 5    0.4411579    -0.0016842105 Otu00033 glmnet              AUC   NA
+#&gt; 6    0.4416579    -0.0021842105 Otu00045 glmnet              AUC   NA
+#&gt; 7    0.4460263    -0.0065526316 Otu00021 glmnet              AUC   NA
+#&gt; 8    0.4300789     0.0093947368 Otu00031 glmnet              AUC   NA
+#&gt; 9    0.4456053    -0.0061315789 Otu00038 glmnet              AUC   NA
+#&gt; 10   0.4287895     0.0106842105 Otu00017 glmnet              AUC   NA
+#&gt; 11   0.4408421    -0.0013684211 Otu00009 glmnet              AUC   NA
+#&gt; 12   0.4394737     0.0000000000 Otu00039 glmnet              AUC   NA
+#&gt; 13   0.4366579     0.0028157895 Otu00023 glmnet              AUC   NA
+#&gt; 14   0.4394737     0.0000000000 Otu00019 glmnet              AUC   NA
+#&gt; 15   0.4461579    -0.0066842105 Otu00026 glmnet              AUC   NA
+#&gt; 16   0.4394737     0.0000000000 Otu00043 glmnet              AUC   NA
+#&gt; 17   0.4389474     0.0005263158 Otu00030 glmnet              AUC   NA
+#&gt; 18   0.4394737     0.0000000000 Otu00042 glmnet              AUC   NA
+#&gt; 19   0.4382895     0.0011842105 Otu00032 glmnet              AUC   NA
+#&gt; 20   0.4352105     0.0042631579 Otu00049 glmnet              AUC   NA
+#&gt; 21   0.4346842     0.0047894737 Otu00060 glmnet              AUC   NA
+#&gt; 22   0.3972895     0.0421842105 Otu00034 glmnet              AUC   NA
+#&gt; 23   0.4499737    -0.0105000000 Otu00010 glmnet              AUC   NA
+#&gt; 24   0.4375789     0.0018947368 Otu00001 glmnet              AUC   NA
+#&gt; 25   0.4394737     0.0000000000 Otu00046 glmnet              AUC   NA
+#&gt; 26   0.4198158     0.0196578947 Otu00015 glmnet              AUC   NA
+#&gt; 27   0.4392632     0.0002105263 Otu00040 glmnet              AUC   NA
+#&gt; 28   0.4566579    -0.0171842105 Otu00024 glmnet              AUC   NA
+#&gt; 29   0.4415789    -0.0021052632 Otu00052 glmnet              AUC   NA
+#&gt; 30   0.4394737     0.0000000000 Otu00016 glmnet              AUC   NA
+#&gt; 31   0.4433421    -0.0038684211 Otu00054 glmnet              AUC   NA
+#&gt; 32   0.4333947     0.0060789474 Otu00012 glmnet              AUC   NA
+#&gt; 33   0.4378947     0.0015789474 Otu00007 glmnet              AUC   NA
+#&gt; 34   0.4248947     0.0145789474 Otu00056 glmnet              AUC   NA
+#&gt; 35   0.4335000     0.0059736842 Otu00058 glmnet              AUC   NA
+#&gt; 36   0.4392105     0.0002631579 Otu00022 glmnet              AUC   NA
+#&gt; 37   0.4193158     0.0201578947 Otu00008 glmnet              AUC   NA
+#&gt; 38   0.4427632    -0.0032894737 Otu00037 glmnet              AUC   NA
+#&gt; 39   0.4417105    -0.0022368421 Otu00047 glmnet              AUC   NA
+#&gt; 40   0.4345000     0.0049736842 Otu00003 glmnet              AUC   NA
+#&gt; 41   0.4411842    -0.0017105263 Otu00011 glmnet              AUC   NA
+#&gt; 42   0.4401579    -0.0006842105 Otu00057 glmnet              AUC   NA
+#&gt; 43   0.4320263     0.0074473684 Otu00014 glmnet              AUC   NA
+#&gt; 44   0.4397368    -0.0002631579 Otu00006 glmnet              AUC   NA
+#&gt; 45   0.4351316     0.0043421053 Otu00041 glmnet              AUC   NA
+#&gt; 46   0.4572368    -0.0177631579 Otu00004 glmnet              AUC   NA
+#&gt; 47   0.4399737    -0.0005000000 Otu00050 glmnet              AUC   NA
+#&gt; 48   0.4350000     0.0044736842 Otu00005 glmnet              AUC   NA
+#&gt; 49   0.4393684     0.0001052632 Otu00025 glmnet              AUC   NA
+#&gt; 50   0.4410789    -0.0016052632 Otu00036 glmnet              AUC   NA
+#&gt; 51   0.4394737     0.0000000000 Otu00051 glmnet              AUC   NA
+#&gt; 52   0.4343158     0.0051578947 Otu00020 glmnet              AUC   NA
+#&gt; 53   0.4335263     0.0059473684 Otu00059 glmnet              AUC   NA
+#&gt; 54   0.4397105    -0.0002368421 Otu00055 glmnet              AUC   NA
+#&gt; 55   0.4237368     0.0157368421 Otu00018 glmnet              AUC   NA
+#&gt; 56   0.4376053     0.0018684211 Otu00027 glmnet              AUC   NA
+#&gt; 57   0.4636053    -0.0241315789 Otu00035 glmnet              AUC   NA
+#&gt; 58   0.4394737     0.0000000000 Otu00053 glmnet              AUC   NA
+#&gt; 59   0.4360789     0.0033947368 Otu00013 glmnet              AUC   NA
+#&gt; 60   0.4265526     0.0129210526 Otu00002 glmnet              AUC   NA</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>

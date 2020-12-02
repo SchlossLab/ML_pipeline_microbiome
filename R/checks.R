@@ -262,7 +262,7 @@ check_packages_installed <- function(...) {
 #'
 #' @examples
 #' abort_packages_not_installed("base")
-#' \dontrun{
+#' \donttest{
 #' abort_packages_not_installed("not-a-package-name", "caret", "dplyr", "non_package")
 #' }
 abort_packages_not_installed <- function(...) {

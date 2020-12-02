@@ -16,7 +16,7 @@ A ggplot2 plot of performance.
 ggplot2 is required to use this function.
 }
 \examples{
-\dontrun{
+\donttest{
 # call `run_ml()` multiple times with different seeds
 results_lst <- lapply(seq(100, 104), function(seed) {
   run_ml(otu_small, "glmnet", seed = seed)

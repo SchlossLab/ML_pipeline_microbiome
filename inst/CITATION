@@ -10,8 +10,8 @@ citEntry(
                       as.person("Jenna Wiens"),
                       as.person("Patrick D. Schloss")),
   year = "2020",
-  url = "http://www.schlosslab.org/mikropml",
+  url = "http://www.schlosslab.org/mikropml/",
   textVersion = paste("Topçuoğlu et al. (2020).",
                       "mikRopML: User-Friendly R Package for Robust Machine Learning Pipelines.",
-                      "http://www.schlosslab.org/mikropml")
+                      "http://www.schlosslab.org/mikropml/")
 )

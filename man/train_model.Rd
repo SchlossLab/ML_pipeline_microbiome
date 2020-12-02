@@ -19,15 +19,28 @@ train_model(
 
 \item{train_data}{Training data.}
 
-\item{method}{ML method. Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.}
+\item{method}{ML method.
+Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.
+\itemize{
+\item glmnet: linear, logistic, or multiclass regression
+\item rf: random forest
+\item rpart2: decision tree
+\item svmRadial: support vector machine
+\item xgbTree: xgboost
+}}
 
 \item{cv}{Cross-validation caret scheme.}
 
-\item{perf_metric_name}{The column name from the output of the function provided to perf_metric_function that is to be used as the performance metric. Defaults: binary classification = \code{"ROC"}, multi-class classification = \code{"logLoss"}, regression = \code{"RMSE"}.}
+\item{perf_metric_name}{The column name from the output of the function
+provided to perf_metric_function that is to be used as the performance metric.
+Defaults: binary classification = \code{"ROC"},
+multi-class classification = \code{"logLoss"},
+regression = \code{"RMSE"}.}
 
 \item{tune_grid}{Tuning grid.}
 
-\item{ntree}{For random forest, how many trees to use (default: 1000). Note that caret doesn't allow this parameter to be tuned.}
+\item{ntree}{For random forest, how many trees to use (default: 1000).
+Note that caret doesn't allow this parameter to be tuned.}
 }
 \value{
 Trained model from \code{\link[caret:train]{caret::train()}}.

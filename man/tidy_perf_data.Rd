@@ -16,7 +16,7 @@ Tidy dataframe with model performance metrics.
 Used by \code{plot_model_performance()}.
 }
 \examples{
-\dontrun{
+\donttest{
 # call `run_ml()` multiple times with different seeds
 results_lst <- lapply(seq(100, 104), function(seed) {
   run_ml(otu_small, "glmnet", seed = seed)

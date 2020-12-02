@@ -40,19 +40,6 @@ otu_mini_group <- c(
   "E", "A", "C", "E", "F", "A"
 )
 
-test_that("run_ml works for linear regression", {
-  expect_equal_ml_results(
-    expect_message(expect_warning(run_ml(otu_mini_bin[, 2:11], # use built-in hyperparameters
-      "glmnet",
-      outcome_colname = "Otu00001",
-      find_feature_importance = TRUE,
-      seed = 2019,
-      cv_times = 2
-    ), "Data is being considered numeric, but all outcome values are integers. If you meant to code your values as categorical, please use character values.")),
-    otu_mini_cont_results_glmnet
-  )
-})
-
 test_that("run_ml works for logistic regression", {
   expect_equal_ml_results(
     expect_warning(
@@ -69,7 +56,22 @@ test_that("run_ml works for logistic regression", {
   )
 })
 
+test_that("run_ml works for linear regression", {
+  skip_on_cran()
+  expect_equal_ml_results(
+    expect_message(expect_warning(run_ml(otu_mini_bin[, 2:11], # use built-in hyperparameters
+      "glmnet",
+      outcome_colname = "Otu00001",
+      find_feature_importance = TRUE,
+      seed = 2019,
+      cv_times = 2
+    ), "Data is being considered numeric, but all outcome values are integers. If you meant to code your values as categorical, please use character values.")),
+    otu_mini_cont_results_glmnet
+  )
+})
+
 test_that("run_ml works for random forest with grouping & feature importance", {
+  skip_on_cran()
   expect_equal_ml_results( # use built-in hyperparams function
     mikropml::run_ml(otu_mini_bin,
       "rf",
@@ -85,6 +87,7 @@ test_that("run_ml works for random forest with grouping & feature importance", {
 })
 
 test_that("run_ml works for svmRadial", {
+  skip_on_cran()
   expect_equal_ml_results(
     expect_warning(mikropml::run_ml(otu_mini_bin,
       "svmRadial",
@@ -98,6 +101,7 @@ test_that("run_ml works for svmRadial", {
 })
 
 test_that("run_ml works for xgbTree", {
+  skip_on_cran()
   skip_on_os(c("linux", "windows")) # bug in xgboost package: https://discuss.xgboost.ai/t/colsample-by-tree-leads-to-not-reproducible-model-across-machines-mac-os-windows/1709
   expect_equal_ml_results(
     mikropml::run_ml(
@@ -114,6 +118,7 @@ test_that("run_ml works for xgbTree", {
 })
 
 test_that("run_ml works for rpart2", {
+  skip_on_cran()
   expect_equal_ml_results(
     mikropml::run_ml(otu_mini_bin,
       "rpart2",

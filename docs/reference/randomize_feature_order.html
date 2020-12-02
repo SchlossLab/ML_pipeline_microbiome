@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -159,7 +159,8 @@
     </tr>
     <tr>
       <th>outcome_colname</th>
-      <td><p>Column name as a string of the outcome variable (default <code>NULL</code>; the first column will be chosen automatically).</p></td>
+      <td><p>Column name as a string of the outcome variable
+(default <code>NULL</code>; the first column will be chosen automatically).</p></td>
     </tr>
     </table>
 
@@ -177,10 +178,10 @@
   a <span class='op'>=</span> <span class='fl'>4</span><span class='op'>:</span><span class='fl'>6</span>, b <span class='op'>=</span> <span class='fl'>7</span><span class='op'>:</span><span class='fl'>9</span>, c <span class='op'>=</span> <span class='fl'>10</span><span class='op'>:</span><span class='fl'>12</span>, d <span class='op'>=</span> <span class='fl'>13</span><span class='op'>:</span><span class='fl'>15</span>
 <span class='op'>)</span>
 <span class='fu'>randomize_feature_order</span><span class='op'>(</span><span class='va'>dat</span>, <span class='st'>"outcome"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   outcome b a  d  c
-#&gt; 1       1 7 4 13 10
-#&gt; 2       2 8 5 14 11
-#&gt; 3       3 9 6 15 12</div></pre>
+</div><div class='output co'>#&gt;   outcome a  c b  d
+#&gt; 1       1 4 10 7 13
+#&gt; 2       2 5 11 8 14
+#&gt; 3       3 6 12 9 15</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -24,60 +24,90 @@ run_ml(
 \arguments{
 \item{dataset}{Dataframe with an outcome variable and other columns as features.}
 
-\item{method}{ML method. Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.}
+\item{method}{ML method.
+Options: \code{c("glmnet", "rf", "rpart2", "svmRadial", "xgbTree")}.
+\itemize{
+\item glmnet: linear, logistic, or multiclass regression
+\item rf: random forest
+\item rpart2: decision tree
+\item svmRadial: support vector machine
+\item xgbTree: xgboost
+}}
 
-\item{outcome_colname}{Column name as a string of the outcome variable (default \code{NULL}; the first column will be chosen automatically).}
+\item{outcome_colname}{Column name as a string of the outcome variable
+(default \code{NULL}; the first column will be chosen automatically).}
 
-\item{hyperparameters}{Dataframe of hyperparameters (default \code{NULL}; will be chosen automatically).}
+\item{hyperparameters}{Dataframe of hyperparameters
+(default \code{NULL}; sensible defaults will be chosen automatically).}
 
-\item{find_feature_importance}{Run permutation imporance (default: \code{FALSE}). This is recommended if you would like to identify features important for predicting your outcome, but it is resource-intensive.}
+\item{find_feature_importance}{Run permutation importance (default: \code{FALSE}).
+\code{TRUE} is recommended if you would like to identify features important for
+predicting your outcome, but it is resource-intensive.}
 
 \item{kfold}{Fold number for k-fold cross-validation (default: \code{5}).}
 
-\item{cv_times}{Number of partitions to create (default: \code{100}).}
+\item{cv_times}{Number of cross-validation partitions to create (default: \code{100}).}
 
-\item{training_frac}{Fraction of data for training set (default: \code{0.8}). The remaining data will be used in the testing set.}
+\item{training_frac}{Fraction of data for training set (default: \code{0.8}).
+The remaining data will be used in the testing set.}
 
-\item{perf_metric_function}{Function to calculate the performance metric to be used for cross-validation and test performance. Some functions are provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}). Defaults: binary classification = \code{twoClassSummary}, multi-class classification = \code{multiClassSummary}, regression = \code{defaultSummary}.}
+\item{perf_metric_function}{Function to calculate the performance metric to
+be used for cross-validation and test performance. Some functions are
+provided by caret (see \code{\link[caret:postResample]{caret::defaultSummary()}}).
+Defaults: binary classification = \code{twoClassSummary},
+multi-class classification = \code{multiClassSummary},
+regression = \code{defaultSummary}.}
 
-\item{perf_metric_name}{The column name from the output of the function provided to perf_metric_function that is to be used as the performance metric. Defaults: binary classification = \code{"ROC"}, multi-class classification = \code{"logLoss"}, regression = \code{"RMSE"}.}
+\item{perf_metric_name}{The column name from the output of the function
+provided to perf_metric_function that is to be used as the performance metric.
+Defaults: binary classification = \code{"ROC"},
+multi-class classification = \code{"logLoss"},
+regression = \code{"RMSE"}.}
 
-\item{groups}{Vector of groups to keep together when splitting the data into train and test sets, and for cross-validation; length matches the number of rows in the dataset (default: no groups).}
+\item{groups}{Vector of groups to keep together when splitting the data into
+train and test sets, and for cross-validation.
+length matches the number of rows in the dataset (default: \code{NULL}).}
 
-\item{corr_thresh}{For feature importance, group correlations above or equal to corr_thresh (default: \code{1}).}
+\item{corr_thresh}{For feature importance, group correlations
+above or equal to \code{corr_thresh} (range \code{0} to \code{1}; default: \code{1}).}
 
-\item{ntree}{For random forest, how many trees to use (default: 1000). Note that caret doesn't allow this parameter to be tuned.}
+\item{ntree}{For random forest, how many trees to use (default: 1000).
+Note that caret doesn't allow this parameter to be tuned.}
 
-\item{seed}{Random seed (default: \code{NA}). Your results will be reproducible if you set a seed.}
+\item{seed}{Random seed (default: \code{NA}).
+Your results will only be reproducible if you set a seed.}
 }
 \value{
 Named list with results:
 \itemize{
 \item \code{trained_model}: Output of \code{\link[caret:train]{caret::train()}}, including the best model.
 \item \code{test_data}: Part of the data that was used for testing.
-\item \code{performance}: Dataframe of performance metrics. The first column is the cross-validation performance metric, and the last two columns are the ML method used and the seed (if one was set), respectively. All other columns are performance metrics calculated on the test data.
+\item \code{performance}: Dataframe of performance metrics. The first column is the cross-validation performance metric, and the last two columns are the ML method used and the seed (if one was set), respectively. All other columns are performance metrics calculated on the test data. This contains only one row, so you can easily combine performance dataframes from multiple calls to \code{run_ml()} (see \code{vignette("parallel")}).
 \item \code{feature_importance}: If feature importances were calculated, a dataframe where each row is a feature or correlated group. The columns are the performance metric of the permuted data, the difference between the true performance metric and the performance metric of the permuted data (true - permuted), the feature name, the ML method, the performance metric name, and the seed (if provided). For AUC and RMSE, the higher perf_metric_diff is, the more important that feature is for predicting the outcome. For log loss, the lower perf_metric_diff is, the more important that feature is for predicting the outcome.
 }
 }
 \description{
-This function runs machine learning (ML), evaluates the best model, and optionally calculates feature importance using a robust framework outlined in \href{https://mbio.asm.org/content/11/3/e00434-20/}{this} paper. Required inputs are a dataframe with an outcome variable and other columns as features, as well as the ML method.
+This function runs machine learning (ML), evaluates the best model,
+and optionally calculates feature importance using a robust framework
+outlined in Topçuoğlu \emph{et al.} 2020 (\href{https://doi.org/10.1128/mBio.00434-20}{doi:10.1128/mBio.00434-20}).
+Required inputs are a dataframe with an outcome variable and other columns
+as features, as well as the ML method.
 See \code{vignette('introduction')} for more details.
 }
 \section{More details}{
 
-For more details, please see the corresponding vignettes:
-\itemize{
-\item \href{http://www.schlosslab.org/mikropml/articles/}{All vignettes}.
-\item \href{http://www.schlosslab.org/mikropml/articles/introduction.html}{Intro vignette}.
-\item \href{http://www.schlosslab.org/mikropml/articles/parallel.html}{Parallel vignette} to make it run faster.
-\item \href{https://github.com/SchlossLab/mikropml-snakemake-workflow}{Snakemake workflow} for high-performance computing clusters.
-}
+
+For more details, please see \href{http://www.schlosslab.org/mikropml/articles/}{the vignettes}.
 }
 
 \examples{
-\dontrun{
+\donttest{
 run_ml(otu_small, "glmnet",
   seed = 2019
+)
+run_ml(otu_small, "rf",
+  outcome_colname = "dx",
+  find_feature_importance = TRUE
 )
 }
 }

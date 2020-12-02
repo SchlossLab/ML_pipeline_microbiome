@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Vignettes</li>
@@ -168,20 +168,40 @@
 <p>Kelly Sovacool, <a href='mailto:sovacool@umich.edu'>sovacool@umich.edu</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># call `run_ml()` multiple times with different seeds</span>
 <span class='va'>results_lst</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>104</span><span class='op'>)</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>seed</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='fu'><a href='run_ml.html'>run_ml</a></span><span class='op'>(</span><span class='va'>otu_small</span>, <span class='st'>"glmnet"</span>, seed <span class='op'>=</span> <span class='va'>seed</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span>
-<span class='co'># extract and combine the performance results</span>
+</div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `caret::train()` issued the following warning:</span>
+#&gt; <span class='warning'> </span>
+#&gt; <span class='warning'>simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
+#&gt; <span class='warning'></span>
+#&gt; <span class='warning'>This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `caret::train()` issued the following warning:</span>
+#&gt; <span class='warning'> </span>
+#&gt; <span class='warning'>simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
+#&gt; <span class='warning'></span>
+#&gt; <span class='warning'>This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='output co'>#&gt; <span class='message'>Using 'dx' as the outcome column.</span></div><div class='input'><span class='co'># extract and combine the performance results</span>
 <span class='va'>perf_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>results_lst</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>result</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='va'>result</span><span class='op'>[[</span><span class='st'>"performance"</span><span class='op'>]</span><span class='op'>]</span>
 <span class='op'>}</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/bind.html'>bind_rows</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='co'># make it pretty!</span>
 <span class='fu'>tidy_perf_data</span><span class='op'>(</span><span class='va'>perf_df</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 3</span><span>
+#&gt;    method metric   value
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span> glmnet CV AUC   0.626
+#&gt; </span><span style='color: #555555;'> 2</span><span> glmnet Test AUC 0.634
+#&gt; </span><span style='color: #555555;'> 3</span><span> glmnet CV AUC   0.632
+#&gt; </span><span style='color: #555555;'> 4</span><span> glmnet Test AUC 0.653
+#&gt; </span><span style='color: #555555;'> 5</span><span> glmnet CV AUC   0.660
+#&gt; </span><span style='color: #555555;'> 6</span><span> glmnet Test AUC 0.589
+#&gt; </span><span style='color: #555555;'> 7</span><span> glmnet CV AUC   0.639
+#&gt; </span><span style='color: #555555;'> 8</span><span> glmnet Test AUC 0.574
+#&gt; </span><span style='color: #555555;'> 9</span><span> glmnet CV AUC   0.657
+#&gt; </span><span style='color: #555555;'>10</span><span> glmnet Test AUC 0.587</div><div class='input'><span class='co'># }</span>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

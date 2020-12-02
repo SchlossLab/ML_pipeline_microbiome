@@ -21,7 +21,7 @@ Use this function to get the row indices for the training set.
 }
 \details{
 If \code{groups} is \code{NULL}, uses \link[caret]{createDataPartition}.
-Otherwises, uses \code{create_grouped_data_partition()}.
+Otherwise, uses \code{create_grouped_data_partition()}.
 
 Set the seed prior to calling this function if you would like your data
 partitions to be reproducible (recommended).

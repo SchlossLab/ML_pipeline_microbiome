@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
 <li class="divider">
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Vignettes</li>
@@ -95,7 +95,7 @@
 
       
 
-      </header><link href="tuning_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+      </header><script src="tuning_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="tuning_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="tuning_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -110,10 +110,10 @@
 
     
     
-<p>One particularly important aspect of ML is hyperparameter tuning. We must explore a range of hyperparameter possibilities to pick the ideal value for the model and dataset. In this package, we do this during the cross-validation step.</p>
+<p>One particularly important aspect of machine learning (ML) is hyperparameter tuning. A hyperparameter is a parameter that is set before the ML training begins. These parameters are tunable and they effect how well the model trains. We must do a grid search for many hyperparameter possibilities and exhaust our search to pick the ideal value for the model and dataset. In this package, we do this during the cross-validation step.</p>
 <p>Let’s start with an example ML run. The input data to <code><a href="../reference/run_ml.html">run_ml()</a></code> is a dataframe where each row is a sample or observation. One column (assumed to be the first) is the outcome of interest, and all of the other columns are the features. We package <code>otu_mini_bin</code> as a small example dataset with <code>mikropml</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co">#install.packages("devtools")</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#install.packages("devtools")</span>
 <span class="co">#devtools::install_github("SchlossLab/mikropml")</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.schlosslab.org/mikropml/">mikropml</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">otu_mini_bin</span><span class="op">)</span>
@@ -130,13 +130,13 @@
 <span class="co">#&gt; 3      176       37      710</span>
 <span class="co">#&gt; 4       78      255      197</span>
 <span class="co">#&gt; 5        1      537      533</span>
-<span class="co">#&gt; 6      251      155      122</span></pre></div>
+<span class="co">#&gt; 6      251      155      122</span></code></pre></div>
 <p>Before we run ML, we can preprocess the data. You can learn more about this in the preprocessing vignette: <code><a href="../articles/preprocess.html">vignette("preprocess")</a></code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">preproc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">otu_mini_bin</span>,
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">preproc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">otu_mini_bin</span>,
                            outcome_colname <span class="op">=</span> <span class="st">'dx'</span><span class="op">)</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
-<span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">preproc</span><span class="op">$</span><span class="va">dat_transformed</span></pre></div>
+<span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">preproc</span><span class="op">$</span><span class="va">dat_transformed</span></code></pre></div>
 <p>We’ll use <code>dat</code> for the following examples.</p>
 <div id="the-simplest-way-to-run_ml" class="section level2">
 <h2 class="hasAnchor">
@@ -145,18 +145,19 @@
 <p>As mentioned above, the minimal input is your dataset (<code>dataset</code>) and the machine learning model you want to use (<code>method</code>).</p>
 <p>When we <code><a href="../reference/run_ml.html">run_ml()</a></code>, by default we do a 100 times repeated, 5-fold cross-validation, where we evaluate the hyperparameters in these 500 total iterations.</p>
 <p>Say we want to run L2 regularized logistic regression. We run ML with:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
                   <span class="st">'glmnet'</span>,
                   outcome_colname <span class="op">=</span> <span class="st">'dx'</span>,
                   cv_times <span class="op">=</span> <span class="fl">100</span>, 
                   seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
 <span class="co">#&gt; Loading required package: lattice</span>
-<span class="co">#&gt; Loading required package: ggplot2</span></pre></div>
-<p>By default, <code><a href="../reference/run_ml.html">run_ml()</a></code> selects default hyperparameters depending on the dataset and method used.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">results</span><span class="op">$</span><span class="va">trained_model</span>
+<span class="co">#&gt; Loading required package: ggplot2</span></code></pre></div>
+<p>You’ll probably get a warning when you run this because the dataset is very small. If you want to learn more about that, check out the introductory vignette about running ML: <code><a href="../articles/introduction.html">vignette("introduction")</a></code>.</p>
+<p>By default, <code><a href="../reference/run_ml.html">run_ml()</a></code> selects hyperparameters depending on the dataset and method used.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span><span class="op">$</span><span class="va">trained_model</span>
 <span class="co">#&gt; glmnet </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; 161 samples</span>
@@ -192,11 +193,11 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Tuning parameter 'alpha' was held constant at a value of 0</span>
 <span class="co">#&gt; AUC was used to select the optimal model using the largest value.</span>
-<span class="co">#&gt; The final values used for the model were alpha = 0 and lambda = 1.</span></pre></div>
-<p>As you can see, the <code>alpha</code> hyperparameter is set to 0, which specifies L2 regularization. <code>glmnet</code> gives us the option to run both L1 and L2 regularization. If we change <code>alpha</code> to 1, we would run L1-regularized logistic regression. The default hyperparameter <code>lambda</code> which adjusts the L2 regularization penalty is a range of values between 10^4 to 10.</p>
+<span class="co">#&gt; The final values used for the model were alpha = 0 and lambda = 1.</span></code></pre></div>
+<p>As you can see, the <code>alpha</code> hyperparameter is set to 0, which specifies L2 regularization. <code>glmnet</code> gives us the option to run both L1 and L2 regularization. If we change <code>alpha</code> to 1, we would run L1-regularized logistic regression. You can also tune <code>alpha</code> by specifying a variety of values between 0 and 1. When you use a value that is between 0 and 1, you are running elastic net. The default hyperparameter <code>lambda</code> which adjusts the L2 regularization penalty is a range of values between 10^-4 to 10.</p>
 <p>When we look at the 100 repeated cross-validation performance metrics such as <code>AUC</code>, <code>Accuracy</code>, <code>prAUC</code> for each tested <code>lambda</code> value, we see that some are not appropriate for this dataset and some do better than others.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">results</span><span class="op">$</span><span class="va">trained_model</span><span class="op">$</span><span class="va">results</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span><span class="op">$</span><span class="va">trained_model</span><span class="op">$</span><span class="va">results</span>
 <span class="co">#&gt;   alpha lambda   logLoss       AUC     prAUC  Accuracy      Kappa        F1</span>
 <span class="co">#&gt; 1     0  1e-04 0.7113272 0.6123301 0.5725828 0.5853927 0.17080523 0.5730989</span>
 <span class="co">#&gt; 2     0  1e-03 0.7113272 0.6123301 0.5725828 0.5853927 0.17080523 0.5730989</span>
@@ -231,25 +232,26 @@
 <span class="co">#&gt; 3       0.08385838  0.08329024 0.13073501       0.06384692          0.07648207</span>
 <span class="co">#&gt; 4       0.08427362  0.08554483 0.12870031       0.06272897          0.07748791</span>
 <span class="co">#&gt; 5       0.07597766  0.09957685 0.13381009       0.06453637          0.07773039</span>
-<span class="co">#&gt; 6       0.02292294  0.31899811 0.08010494       0.03803159          0.03184136</span></pre></div>
+<span class="co">#&gt; 6       0.02292294  0.31899811 0.08010494       0.03803159          0.03184136</span></code></pre></div>
 </div>
 <div id="customizing-hyperparameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#customizing-hyperparameters" class="anchor"></a>Customizing hyperparameters</h2>
 <p>In this example, we want to change the <code>lambda</code> values to provide a better range to test in the cross-validation step. We don’t want to use the defaults but provide our own named list with new values.</p>
 <p>For example:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">new_hp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, 
-               lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.015</span>, <span class="fl">0.02</span>, <span class="fl">0.025</span>, <span class="fl">0.03</span>, <span class="fl">0.04</span>, <span class="fl">0.05</span>, <span class="fl">0.06</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">new_hp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, 
+               lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.00001</span>, <span class="fl">0.0001</span>, <span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.015</span>, <span class="fl">0.02</span>, <span class="fl">0.025</span>, <span class="fl">0.03</span>, <span class="fl">0.04</span>, <span class="fl">0.05</span>, <span class="fl">0.06</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">new_hp</span>
 <span class="co">#&gt; $alpha</span>
 <span class="co">#&gt; [1] 1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $lambda</span>
-<span class="co">#&gt; [1] 0.010 0.015 0.020 0.025 0.030 0.040 0.050 0.060</span></pre></div>
+<span class="co">#&gt;  [1] 0.00001 0.00010 0.00100 0.01000 0.01500 0.02000 0.02500 0.03000 0.04000</span>
+<span class="co">#&gt; [10] 0.05000 0.06000 0.10000</span></code></pre></div>
 <p>Now let’s run L2 logistic regression with the new <code>lambda</code> values:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
                   <span class="st">'glmnet'</span>,
                   outcome_colname <span class="op">=</span> <span class="st">'dx'</span>,
                   cv_times <span class="op">=</span> <span class="fl">100</span>,
@@ -269,16 +271,23 @@
 <span class="co">#&gt; Summary of sample sizes: 128, 129, 129, 129, 129, 130, ... </span>
 <span class="co">#&gt; Resampling results across tuning parameters:</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;   lambda  logLoss    AUC        prAUC      Accuracy   Kappa      F1       </span>
-<span class="co">#&gt;   0.010   0.6984432  0.6156112  0.5758977  0.5830960  0.1665062  0.5759265</span>
-<span class="co">#&gt;   0.015   0.6913332  0.6169396  0.5770496  0.5839720  0.1683912  0.5786347</span>
-<span class="co">#&gt;   0.020   0.6870103  0.6177313  0.5779563  0.5833645  0.1673234  0.5796891</span>
-<span class="co">#&gt;   0.025   0.6846387  0.6169757  0.5769305  0.5831907  0.1669901  0.5792840</span>
-<span class="co">#&gt;   0.030   0.6834369  0.6154763  0.5754118  0.5821394  0.1649081  0.5786336</span>
-<span class="co">#&gt;   0.040   0.6833322  0.6124776  0.5724802  0.5786224  0.1578750  0.5735757</span>
-<span class="co">#&gt;   0.050   0.6850454  0.6069059  0.5668928  0.5732197  0.1468699  0.5624480</span>
-<span class="co">#&gt;   0.060   0.6880861  0.5974311  0.5596714  0.5620224  0.1240112  0.5375824</span>
+<span class="co">#&gt;   lambda   logLoss    AUC        prAUC      Accuracy   Kappa      F1       </span>
+<span class="co">#&gt;   0.00001  0.7215038  0.6112253  0.5720005  0.5842184  0.1684871  0.5726974</span>
+<span class="co">#&gt;   0.00010  0.7215038  0.6112253  0.5720005  0.5842184  0.1684871  0.5726974</span>
+<span class="co">#&gt;   0.00100  0.7209099  0.6112771  0.5719601  0.5845329  0.1691285  0.5730414</span>
+<span class="co">#&gt;   0.01000  0.6984432  0.6156112  0.5758977  0.5830960  0.1665062  0.5759265</span>
+<span class="co">#&gt;   0.01500  0.6913332  0.6169396  0.5770496  0.5839720  0.1683912  0.5786347</span>
+<span class="co">#&gt;   0.02000  0.6870103  0.6177313  0.5779563  0.5833645  0.1673234  0.5796891</span>
+<span class="co">#&gt;   0.02500  0.6846387  0.6169757  0.5769305  0.5831907  0.1669901  0.5792840</span>
+<span class="co">#&gt;   0.03000  0.6834369  0.6154763  0.5754118  0.5821394  0.1649081  0.5786336</span>
+<span class="co">#&gt;   0.04000  0.6833322  0.6124776  0.5724802  0.5786224  0.1578750  0.5735757</span>
+<span class="co">#&gt;   0.05000  0.6850454  0.6069059  0.5668928  0.5732197  0.1468699  0.5624480</span>
+<span class="co">#&gt;   0.06000  0.6880861  0.5974311  0.5596714  0.5620224  0.1240112  0.5375824</span>
+<span class="co">#&gt;   0.10000  0.6944846  0.5123565  0.3034983  0.5120114  0.0110144  0.3852423</span>
 <span class="co">#&gt;   Sensitivity  Specificity  Pos_Pred_Value  Neg_Pred_Value  Precision</span>
+<span class="co">#&gt;   0.5798500    0.5888162    0.5780748       0.5971698       0.5780748</span>
+<span class="co">#&gt;   0.5798500    0.5888162    0.5780748       0.5971698       0.5780748</span>
+<span class="co">#&gt;   0.5801167    0.5891912    0.5784544       0.5974307       0.5784544</span>
 <span class="co">#&gt;   0.5883667    0.5783456    0.5755460       0.5977390       0.5755460</span>
 <span class="co">#&gt;   0.5929750    0.5756471    0.5763123       0.5987220       0.5763123</span>
 <span class="co">#&gt;   0.5967167    0.5708824    0.5748385       0.5990649       0.5748385</span>
@@ -287,24 +296,29 @@
 <span class="co">#&gt;   0.5904500    0.5677353    0.5699817       0.5943308       0.5699817</span>
 <span class="co">#&gt;   0.5734833    0.5736176    0.5668523       0.5864448       0.5668523</span>
 <span class="co">#&gt;   0.5360333    0.5881250    0.5595918       0.5722851       0.5595918</span>
+<span class="co">#&gt;   0.1145917    0.8963456    0.5255752       0.5132665       0.5255752</span>
 <span class="co">#&gt;   Recall     Detection_Rate  Balanced_Accuracy</span>
-<span class="co">#&gt;   0.5883667  0.2886052       0.5833561        </span>
-<span class="co">#&gt;   0.5929750  0.2908430       0.5843110        </span>
-<span class="co">#&gt;   0.5967167  0.2926468       0.5837995        </span>
-<span class="co">#&gt;   0.5970250  0.2927871       0.5836485        </span>
-<span class="co">#&gt;   0.5964500  0.2924858       0.5826110        </span>
-<span class="co">#&gt;   0.5904500  0.2895199       0.5790926        </span>
-<span class="co">#&gt;   0.5734833  0.2811986       0.5735505        </span>
-<span class="co">#&gt;   0.5360333  0.2627020       0.5620792        </span>
+<span class="co">#&gt;   0.5798500  0.28441068      0.5843331        </span>
+<span class="co">#&gt;   0.5798500  0.28441068      0.5843331        </span>
+<span class="co">#&gt;   0.5801167  0.28453770      0.5846539        </span>
+<span class="co">#&gt;   0.5883667  0.28860521      0.5833561        </span>
+<span class="co">#&gt;   0.5929750  0.29084305      0.5843110        </span>
+<span class="co">#&gt;   0.5967167  0.29264681      0.5837995        </span>
+<span class="co">#&gt;   0.5970250  0.29278708      0.5836485        </span>
+<span class="co">#&gt;   0.5964500  0.29248583      0.5826110        </span>
+<span class="co">#&gt;   0.5904500  0.28951992      0.5790926        </span>
+<span class="co">#&gt;   0.5734833  0.28119862      0.5735505        </span>
+<span class="co">#&gt;   0.5360333  0.26270204      0.5620792        </span>
+<span class="co">#&gt;   0.1145917  0.05585777      0.5054686        </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Tuning parameter 'alpha' was held constant at a value of 1</span>
 <span class="co">#&gt; AUC was used to select the optimal model using the largest value.</span>
-<span class="co">#&gt; The final values used for the model were alpha = 1 and lambda = 0.02.</span></pre></div>
-<p>This time, we cover a different range of <code>lambda</code> settings in cross-validation.</p>
+<span class="co">#&gt; The final values used for the model were alpha = 1 and lambda = 0.02.</span></code></pre></div>
+<p>This time, we cover a larger and different range of <code>lambda</code> settings in cross-validation.</p>
 <p>How do we know which <code>lambda</code> value is the best one? To answer that, we need to run the ML pipeline on multiple data splits and look at the mean cross-validation performance of each <code>lambda</code> across those modeling experiments. We describe how to run ML with multiple data splits in <code><a href="../articles/parallel.html">vignette("parallel")</a></code>.</p>
-<p>Here we run ML on 3 data splits with the new <code>lambda</code> range we defined above. We can then use <code>plot_hp_performance</code> to see which <code>lambda</code> gives us the largest mean AUC value across modeling experiments.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">102</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">seed</span><span class="op">)</span> <span class="op">{</span>
+<p>Here we run ML with the new <code>lambda</code> range we defined above. We run it 3 times each with a different seed, which will result in different splits of the data into training and testing sets. We can then use <code>plot_hp_performance</code> to see which <code>lambda</code> gives us the largest mean AUC value across modeling experiments.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">102</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">seed</span><span class="op">)</span> <span class="op">{</span>
    <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">"glmnet"</span>, seed <span class="op">=</span> <span class="va">seed</span>, hyperparameters <span class="op">=</span> <span class="va">new_hp</span><span class="op">)</span>
  <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
@@ -312,16 +326,16 @@
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
 <span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">results</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">trained_model</span><span class="op">)</span>
 <span class="va">hp_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine_hp_performance.html">combine_hp_performance</a></span><span class="op">(</span><span class="va">models</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot_hp_performance.html">plot_hp_performance</a></span><span class="op">(</span><span class="va">hp_metrics</span><span class="op">$</span><span class="va">dat</span>, <span class="va">lambda</span>, <span class="va">AUC</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/plot_hp_performance.html">plot_hp_performance</a></span><span class="op">(</span><span class="va">hp_metrics</span><span class="op">$</span><span class="va">dat</span>, <span class="va">lambda</span>, <span class="va">AUC</span><span class="op">)</span></code></pre></div>
 <p><img src="tuning_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>As you can see, we get a mean maxima at 0.3 which is the best <code>lambda</code> value for this dataset when we run 3 datasplits. This value is used for building the final model. For a better understanding of the global maxima, it would be better to run more datasplits.</p>
+<p>As you can see, we get a mean maxima at <code>0.03</code> which is the best <code>lambda</code> value for this dataset when we run 3 data splits. The fact that we are seeing this maxima in the middle of our range and not at the edges, shows that we are providing a large enough range to exhaust our <code>lambda</code> search as we build the model. We recommend the user to use this plot to make sure the best hyperparameter is not on the edges of the provided list. For a better understanding of the global maxima, it would be better to run more data splits by using more seeds. We picked 3 seeds to keep the runtime down for this vignette, but for real-world data we recommend using many more seeds.</p>
 </div>
 <div id="hyperparameter-options" class="section level2">
 <h2 class="hasAnchor">
 <a href="#hyperparameter-options" class="anchor"></a>Hyperparameter options</h2>
 <p>You can see which default hyperparameters would be used for your dataset with <code><a href="../reference/get_hyperparams_list.html">get_hyperparams_list()</a></code>. Here are a few examples with built-in datasets we provide:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="../reference/get_hyperparams_list.html">get_hyperparams_list</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>, <span class="st">'glmnet'</span><span class="op">)</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_hyperparams_list.html">get_hyperparams_list</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>, <span class="st">'glmnet'</span><span class="op">)</span>
 <span class="co">#&gt; $lambda</span>
 <span class="co">#&gt; [1] 1e-04 1e-03 1e-02 1e-01 1e+00 1e+01</span>
 <span class="co">#&gt; </span>
@@ -332,12 +346,14 @@
 <span class="co">#&gt; [1] 2 3 6</span>
 <span class="fu"><a href="../reference/get_hyperparams_list.html">get_hyperparams_list</a></span><span class="op">(</span><span class="va">otu_small</span>, <span class="st">'rf'</span><span class="op">)</span>
 <span class="co">#&gt; $mtry</span>
-<span class="co">#&gt; [1]  4  8 16</span></pre></div>
+<span class="co">#&gt; [1]  4  8 16</span></code></pre></div>
 <p>Here are the hyperparameters that are tuned for each of the modeling methods. The output for all of them is very similar, so we won’t go into those details.</p>
 <div id="regression" class="section level3">
 <h3 class="hasAnchor">
 <a href="#regression" class="anchor"></a>Regression</h3>
-<p>As mentioned above, <code>glmnet</code> uses the <code>alpha</code> and <code>lambda</code> hyperparameters. <code>alpha</code> of <code>0</code> is for L2 regularization (ridge). <code>alpha</code> of <code>1</code> is for L1 regularization (lasso). The default hyperparameters chosen by <code><a href="../reference/run_ml.html">run_ml()</a></code> are fixed for <code>glmnet</code>.</p>
+<p>As mentioned above, <code>glmnet</code> uses the <code>alpha</code> parameter and <code>lambda</code> hyperparameter. <code>alpha</code> of <code>0</code> is for L2 regularization (ridge). <code>alpha</code> of <code>1</code> is for L1 regularization (lasso). <code>alpha</code> in between is elastic net. You can also tune <code>alpha</code> like you would any other hyperparameter.</p>
+<p>Please refer to original <code>glmnet</code> documentation for more information: <a href="https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html" class="uri">https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html</a></p>
+<p>The default hyperparameters chosen by <code><a href="../reference/run_ml.html">run_ml()</a></code> are fixed for <code>glmnet</code>.</p>
 <pre><code>#&gt; $lambda
 #&gt; [1] 1e-04 1e-03 1e-02 1e-01 1e+00 1e+01
 #&gt; 
@@ -347,7 +363,7 @@
 <div id="random-forest" class="section level3">
 <h3 class="hasAnchor">
 <a href="#random-forest" class="anchor"></a>Random forest</h3>
-<p>When we run the <code>rf</code> method, we are tuning the <code>mtry</code> hyperparameter. This is the number of features that are randomly collected to be sampled at each tree node. It needs to be an appropriate number in relation to the number of features in the dataset.</p>
+<p>When we run <code>rf</code> we are using the the <code>randomForest</code> package implementation. We are tuning the <code>mtry</code> hyperparameter. This is the number of features that are randomly collected to be sampled at each tree node. This number needs to be less than the number of features in the dataset. Please refer to the original documentation for more information: <a href="https://cran.r-project.org/web/packages/randomForest/randomForest.pdf" class="uri">https://cran.r-project.org/web/packages/randomForest/randomForest.pdf</a></p>
 <p>By default, we take the square root of number of features in the dataset and we provide a range that is <code>[sqrt_features / 2, sqrt_features, sqrt_features * 2]</code>.</p>
 <p>For example if the number of features is 1000:</p>
 <pre><code>#&gt; $mtry
@@ -357,7 +373,7 @@
 <div id="decision-tree" class="section level3">
 <h3 class="hasAnchor">
 <a href="#decision-tree" class="anchor"></a>Decision tree</h3>
-<p>When we run the <code>rpart2</code> method, we are tuning the <code>maxdepth</code> hyperparameter. This is the maximum depth of any node of the final tree.</p>
+<p>When we run <code>rpart2</code>, we are running the <code>rpart</code> package implementation of decision tree. We are tuning the <code>maxdepth</code> hyperparameter. This is the maximum depth of any node of the final tree. Please refer to the original documentation for more information on maxdepth: <a href="https://cran.r-project.org/web/packages/rpart/rpart.pdf" class="uri">https://cran.r-project.org/web/packages/rpart/rpart.pdf</a></p>
 <p>By default, we provide a range that is less than the number of features in the dataset.</p>
 <p>For example if we have 1000 features:</p>
 <pre><code>#&gt; $maxdepth
@@ -366,10 +382,10 @@
 <pre><code>#&gt; $maxdepth
 #&gt; [1] 1 2 4 8</code></pre>
 </div>
-<div id="svm" class="section level3">
+<div id="svm-with-radial-basis-kernel" class="section level3">
 <h3 class="hasAnchor">
-<a href="#svm" class="anchor"></a>SVM</h3>
-<p>When we run the <code>svmRadial</code> method, we are tuning the <code>C</code> and <code>sigma</code> hyperparameters. <code>sigma</code> defines how far the influence of a single training example reaches and <code>C</code> behaves as a regularization parameter.</p>
+<a href="#svm-with-radial-basis-kernel" class="anchor"></a>SVM with radial basis kernel</h3>
+<p>When we run the <code>svmRadial</code> method, we are tuning the <code>C</code> and <code>sigma</code> hyperparameters. <code>sigma</code> defines how far the influence of a single training example reaches and <code>C</code> behaves as a regularization parameter. Please refer to this great <code>sklearn</code> resource for more information on these hyperparameters: <a href="https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html" class="uri">https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html</a></p>
 <p>By default, we provide 2 separate range of values for the two hyperparameters.</p>
 <pre><code>#&gt; $C
 #&gt; [1] 1e-03 1e-02 1e-01 1e+00 1e+01 1e+02
@@ -380,7 +396,8 @@
 <div id="xgboost" class="section level3">
 <h3 class="hasAnchor">
 <a href="#xgboost" class="anchor"></a>XGBoost</h3>
-<p>When we run the <code>xgbTree</code> method, we are tuning the <code>nrounds</code>, <code>gamma</code>, <code>eta</code> <code>max_depth</code>, <code>colsample_bytree</code>, <code>min_child_weight</code> and <code>subsample</code> hyperparameters. Like other tree-based methods some of these hyperparameters need to be appropriate in relation to the number of features in the dataset.</p>
+<p>When we run the <code>xgbTree</code> method, we are tuning the <code>nrounds</code>, <code>gamma</code>, <code>eta</code> <code>max_depth</code>, <code>colsample_bytree</code>, <code>min_child_weight</code> and <code>subsample</code> hyperparameters.</p>
+<p>You can read more about these hyperparameters here: <a href="https://xgboost.readthedocs.io/en/latest/parameter.html" class="uri">https://xgboost.readthedocs.io/en/latest/parameter.html</a></p>
 <p>By default, we set the <code>nrounds</code>, <code>gamma</code>, <code>colsample_bytree</code> and <code>min_child_weight</code> to fixed values and we provide a range of values for <code>eta</code>, <code>max_depth</code> and <code>subsample</code>. All of these can be changed and optimized by the user by supplying a custom named list of hyperparameters to <code><a href="../reference/run_ml.html">run_ml()</a></code>.</p>
 <pre><code>#&gt; $nrounds
 #&gt; [1] 100

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mikropml</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
 <li class="divider">
     <li class="dropdown-header">Paper</li>
     <li>
-      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Robust Machine Learning Pipelines</a>
+      <a href="../articles/paper.html">mikropml: User-Friendly R Package for Supervised Machine Learning Pipelines</a>
     </li>
     <li class="divider">
     <li class="dropdown-header">Vignettes</li>
@@ -110,7 +110,7 @@
 
     
     
-<p>The goal of <code>mikropml</code> is to make supervised machine learning (ML) easy for you to run while not losing any of the rigor associated with robust machine learning pipelines. All you need to run ML is one function: <code><a href="../reference/run_ml.html">run_ml()</a></code>. We’ve selected sensible default arguments related to best practices <span class="citation">(Topçuoğlu et al. 2020, @tang_democratizing_2020)</span>, but we allow you to change those arguments to tailor <code><a href="../reference/run_ml.html">run_ml()</a></code> to the needs of your data.</p>
+<p>The goal of <code>mikropml</code> is to make supervised machine learning (ML) easy for you to run while implementing good practices for machine learning pipelines. All you need to run ML is one function: <code><a href="../reference/run_ml.html">run_ml()</a></code>. We’ve selected sensible default arguments related to good practices <span class="citation">(Topçuoğlu et al. 2020; Tang et al. 2020)</span>, but we allow you to change those arguments to tailor <code><a href="../reference/run_ml.html">run_ml()</a></code> to the needs of your data.</p>
 <p>This document takes you through all of the <code><a href="../reference/run_ml.html">run_ml()</a></code> inputs, both required and optional, as well as the outputs.</p>
 <p>In summary, you provide:</p>
 <ul>
@@ -135,8 +135,8 @@
 <h2 class="hasAnchor">
 <a href="#the-input-data" class="anchor"></a>The input data</h2>
 <p>The input data to <code><a href="../reference/run_ml.html">run_ml()</a></code> is a dataframe where each row is a sample or observation. One column (assumed to be the first) is the outcome of interest, and all of the other columns are the features. We package <code>otu_mini_bin</code> as a small example dataset with <code>mikropml</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co">#install.packages("devtools")</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#install.packages("devtools")</span>
 <span class="co">#devtools::install_github("SchlossLab/mikropml")</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.schlosslab.org/mikropml/">mikropml</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">otu_mini_bin</span><span class="op">)</span>
@@ -153,8 +153,8 @@
 <span class="co">#&gt; 3      176       37      710</span>
 <span class="co">#&gt; 4       78      255      197</span>
 <span class="co">#&gt; 5        1      537      533</span>
-<span class="co">#&gt; 6      251      155      122</span></pre></div>
-<p>Here, <code>dx</code> is the outcome column (normal or cancer), and there are 3 features (<code>Otu00001</code> through <code>Otu00003</code>). Because there are only 2 outcomes, we will be performing binary classification in the majority of the examples below. At the bottom, we will also briefly provide examples of multi-class and continuous outcomes. As you’ll see, you run them in the same way as for binary classification!</p>
+<span class="co">#&gt; 6      251      155      122</span></code></pre></div>
+<p>Here, <code>dx</code> is the outcome column (normal or cancer), and there are 10 features (<code>Otu00001</code> through <code>Otu00010</code>). Because there are only 2 outcomes, we will be performing binary classification in the majority of the examples below. At the bottom, we will also briefly provide examples of multi-class and continuous outcomes. As you’ll see, you run them in the same way as for binary classification!</p>
 <p>The feature columns are the amount of each <a href="https://en.wikipedia.org/wiki/Operational_taxonomic_unit">Operational Taxonomic Unit (OTU; proxy for species)</a> in microbiome samples from patients with cancer and without cancer. The goal is to predict <code>dx</code>, which stands for diagnosis. This diagnosis can be cancer or not based on an individual’s microbiome. No need to understand exactly what that means, but if you’re interested you can read more about it from the original paper <span class="citation">(Topçuoğlu et al. 2020)</span>.</p>
 <p>For real machine learning applications you’ll need to use more features, but for the purposes of this vignette we’ll stick with this example dataset so everything runs faster.</p>
 </div>
@@ -168,47 +168,33 @@
 <li>Random forest (<code>"rf"</code>)</li>
 <li>Decision tree (<code>"rpart2"</code>)</li>
 <li>Support vector machine with a linear basis kernel (<code>"svmRadial"</code>)</li>
-<li>xgBoost (<code>"xgbTree"</code>)</li>
+<li>xgboost (<code>"xgbTree"</code>)</li>
 </ul>
 <p>For documentation on these methods, as well as many others, you can look at the <a href="https://topepo.github.io/caret/available-models.html">available models</a> (or see <a href="https://topepo.github.io/caret/train-models-by-tag.html">here</a> for a list by tag). While we have not vetted the other models used by <code>caret</code>, our function is general enough that others might work. While we can’t promise that we can help with other models, feel free to <a href="https://github.com/SchlossLab/mikropml/issues">open an issue on GitHub</a> if you have questions about other models and we <em>might</em> be able to help.</p>
-<p>We will focus on <code>glmnet</code> which is our defualt implementation of L2-regularized logistic regression. here, then cover a few other examples towards the end.</p>
+<p>We will focus on <code>glmnet</code> which is our default implementation of L2-regularized logistic regression here, then cover a few other examples towards the end.</p>
 </div>
 </div>
 <div id="before-running-ml" class="section level1">
 <h1 class="hasAnchor">
 <a href="#before-running-ml" class="anchor"></a>Before running ML</h1>
-<p>Before you run ML, you should consider preprocessing your data, either on your own or with the <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> function. You can learn more about this in the preprocessing vignette: <code><a href="../articles/preprocess.html">vignette("preprocess")</a></code>. Running it with default options will center and scale the features of our dataset.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">preproc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess_data.html">preprocess_data</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">otu_mini_bin</span>,
-                           outcome_colname <span class="op">=</span> <span class="st">'dx'</span><span class="op">)</span>
-<span class="co">#&gt; Using 'dx' as the outcome column.</span>
-<span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">preproc</span><span class="op">$</span><span class="va">dat_transformed</span></pre></div>
-<p>We’ll use <code>dat</code> for the following examples.</p>
+<p>Before you run ML, you should consider preprocessing your data, either on your own or with the <code><a href="../reference/preprocess_data.html">preprocess_data()</a></code> function. You can learn more about this in the preprocessing vignette: <code><a href="../articles/preprocess.html">vignette("preprocess")</a></code>.</p>
 </div>
 <div id="the-simplest-way-to-run_ml" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-simplest-way-to-run_ml" class="anchor"></a>The simplest way to <code>run_ml()</code>
 </h1>
 <p>As mentioned above, the minimal input is your dataset (<code>dataset</code>) and the machine learning model you want to use (<code>method</code>).</p>
-<p>We may also want to provide:</p>
+<p>You may also want to provide:</p>
 <ul>
-<li>The outcome column name. By default it will pick the first column, but it’s best practice to specify it explicitly.</li>
+<li>The outcome column name. By default <code><a href="../reference/run_ml.html">run_ml()</a></code> will pick the first column, but it’s best practice to specify the column name explicitly.</li>
 <li>A seed so that the results will be reproducible, and so that you get the same results as those you see here (i.e have the same train/test split).</li>
 </ul>
 <p>Say we want to use <code>glmnet</code>. Then, run ML with:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
                   <span class="st">'glmnet'</span>,
                   outcome_colname <span class="op">=</span> <span class="st">'dx'</span>,
-                  seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span>
-<span class="co">#&gt; Using 'dx' as the outcome column.</span>
-<span class="co">#&gt; Loading required package: lattice</span>
-<span class="co">#&gt; Loading required package: ggplot2</span>
-<span class="co">#&gt; Warning in (function (w) : `caret::train()` issued the following warning:</span>
-<span class="co">#&gt;  </span>
-<span class="co">#&gt; simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></pre></div>
+                  seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></code></pre></div>
 <p>You’ll notice a few things:</p>
 <ol style="list-style-type: decimal">
 <li>It takes a little while to run. This is because of some of the parameters we use.</li>
@@ -216,49 +202,53 @@
 <li>There was a warning. Don’t worry about this warning right now - it just means that some of the hyperparameters aren’t a good fit - but if you’re interested in learning more, see <code><a href="../articles/tuning.html">vignette("tuning")</a></code>.</li>
 </ol>
 <p>Now, let’s dig into the output a bit. The results is a list of 4 things:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span>
 <span class="co">#&gt; [1] "trained_model"      "test_data"          "performance"       </span>
-<span class="co">#&gt; [4] "feature_importance"</span></pre></div>
+<span class="co">#&gt; [4] "feature_importance"</span></code></pre></div>
 <p><code>trained_model</code> is the trained model from <code>caret</code>. There is a bunch of info in this that we won’t get into, because you can learn more from the <code><a href="https://rdrr.io/pkg/caret/man/train.html">caret::train()</a></code> documentation.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">trained_model</span><span class="op">)</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">trained_model</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "method"       "modelInfo"    "modelType"    "results"      "pred"        </span>
 <span class="co">#&gt;  [6] "bestTune"     "call"         "dots"         "metric"       "control"     </span>
 <span class="co">#&gt; [11] "finalModel"   "preProcess"   "trainingData" "resample"     "resampledCM" </span>
 <span class="co">#&gt; [16] "perfNames"    "maximize"     "yLimits"      "times"        "levels"      </span>
-<span class="co">#&gt; [21] "terms"        "coefnames"    "xlevels"</span></pre></div>
-<p><code>test_data</code> is the data that was used for testing. In machine learning, it’s always important to have a held-out test data that is not used in the training stage. In this pipeline we do that using <code><a href="../reference/run_ml.html">run_ml()</a></code> where we splitting your data in to training and testing. The training data is used to build the model (e.g. tune hyperparameters, learn the data) and the test data is used to evaluate how well the model performs.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">test_data</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 6 x 11</span>
-<span class="co">#&gt;   dx    Otu00009 Otu00005 Otu00010 Otu00001 Otu00008 Otu00004 Otu00003 Otu00002</span>
-<span class="co">#&gt;   &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 norm…  -0.409   -0.275    0.281    -0.556    0.294   -0.352    1.62    1.14  </span>
-<span class="co">#&gt; 2 norm…  -0.645   -0.0453  -0.608    -0.802   -0.421   -0.591   -0.419   0.0775</span>
-<span class="co">#&gt; 3 canc…  -0.0652  -0.744   -0.0589    1.49    -0.424   -0.546   -0.746  -0.684 </span>
-<span class="co">#&gt; 4 norm…  -0.133    0.458   -0.423    -0.375    2.10     1.38     0.103  -0.0519</span>
-<span class="co">#&gt; 5 norm…  -0.869   -0.689   -0.154    -0.916   -0.676   -0.535   -0.732  -0.675 </span>
-<span class="co">#&gt; 6 norm…  -0.833   -0.193   -0.932    -0.881   -0.590   -0.582   -0.596  -0.386 </span>
-<span class="co">#&gt; # … with 2 more variables: Otu00007 &lt;dbl&gt;, Otu00006 &lt;dbl&gt;</span></pre></div>
+<span class="co">#&gt; [21] "terms"        "coefnames"    "xlevels"</span></code></pre></div>
+<p><code>test_data</code> is the partition of the dataset that was used for testing. In machine learning, it’s always important to have a held-out test dataset that is not used in the training stage. In this pipeline we do that using <code><a href="../reference/run_ml.html">run_ml()</a></code> where we split your data into training and testing sets. The training data are used to build the model (e.g. tune hyperparameters, learn the data) and the test data are used to evaluate how well the model performs.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">test_data</span><span class="op">)</span>
+<span class="co">#&gt;        dx Otu00009 Otu00005 Otu00010 Otu00001 Otu00008 Otu00004 Otu00003</span>
+<span class="co">#&gt; 9  normal      119      142      248      256      363      112      871</span>
+<span class="co">#&gt; 14 normal       60      209       70       86       96        1      123</span>
+<span class="co">#&gt; 16 cancer      205        5      180     1668       95       22        3</span>
+<span class="co">#&gt; 17 normal      188      356      107      381     1035      915      315</span>
+<span class="co">#&gt; 27 normal        4       21      161        7        1       27        8</span>
+<span class="co">#&gt; 30 normal       13      166        5       31       33        5       58</span>
+<span class="co">#&gt;    Otu00002 Otu00007 Otu00006</span>
+<span class="co">#&gt; 9       995        0      137</span>
+<span class="co">#&gt; 14      426       54       40</span>
+<span class="co">#&gt; 16       20      590      570</span>
+<span class="co">#&gt; 17      357      253      341</span>
+<span class="co">#&gt; 27       25      322        5</span>
+<span class="co">#&gt; 30      179        6       30</span></code></pre></div>
 <p><code>performance</code> is a dataframe of (mainly) performance metrics (1 column for cross-validation performance metric, several for test performance metrics, and 2 columns at the end with ML method and seed):</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">results</span><span class="op">$</span><span class="va">performance</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span><span class="op">$</span><span class="va">performance</span>
 <span class="co">#&gt; # A tibble: 1 x 17</span>
 <span class="co">#&gt;   cv_metric_AUC logLoss   AUC prAUC Accuracy Kappa    F1 Sensitivity Specificity</span>
 <span class="co">#&gt;           &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span>
-<span class="co">#&gt; 1         0.628   0.684 0.647 0.606    0.590 0.179   0.6         0.6       0.579</span>
+<span class="co">#&gt; 1         0.622   0.684 0.647 0.606    0.590 0.179   0.6         0.6       0.579</span>
 <span class="co">#&gt; # … with 8 more variables: Pos_Pred_Value &lt;dbl&gt;, Neg_Pred_Value &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   Precision &lt;dbl&gt;, Recall &lt;dbl&gt;, Detection_Rate &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   Balanced_Accuracy &lt;dbl&gt;, method &lt;chr&gt;, seed &lt;dbl&gt;</span></pre></div>
-<p>When using logistic regression for binary classification, area under the receiver-operator characteristic curve (AUC) is a useful meric to evaluate model performance. Because of that, it’s the default that we use for <code>mikropml</code>. However, it is crucial to evaluate your model performance using multiple metrics. Below you can find more information about other performance metrics and how to use them in our package.</p>
-<p><code>cv_metric_AUC</code> is the AUC for the cross-validation folds for the training data. This gives us a sense of how good the model is on the training data.</p>
-<p>Most of the other columns are performance metrics for the test data — the data that wasn’t used to build the model. Here, you can see that the AUC for the test data is not much above 0.5, suggesting that this model does not predict much better than chance, and that the model is overfitted because the cross-validation AUC is much higher than the training AUC. This isn’t too surprising since we’re using so few features so don’t be discouraged. The default option also provides a number of other performance metrics that you might be interested in, including area under the precision-recall curve (prAUC).</p>
-<p>At the very end, there are columns for the method and seed (if you set one) to help with combining results from multiple runs (see <code><a href="../articles/parallel.html">vignette("parallel")</a></code>).</p>
+<span class="co">#&gt; #   Balanced_Accuracy &lt;dbl&gt;, method &lt;chr&gt;, seed &lt;dbl&gt;</span></code></pre></div>
+<p>When using logistic regression for binary classification, area under the receiver-operator characteristic curve (AUC) is a useful metric to evaluate model performance. Because of that, it’s the default that we use for <code>mikropml</code>. However, it is crucial to evaluate your model performance using multiple metrics. Below you can find more information about other performance metrics and how to use them in our package.</p>
+<p><code>cv_metric_AUC</code> is the AUC for the cross-valdaton folds for the training data. This gives us a sense of how well the model performs on the training data.</p>
+<p>Most of the other columns are performance metrics for the test data — the data that wasn’t used to build the model. Here, you can see that the AUC for the test data is not much above 0.5, suggesting that this model does not predict much better than chance, and that the model is overfitted because the cross-valdaton AUC (<code>cv_metric_AUC</code>, measured during training) is much higher than the testing AUC. This isn’t too surprising since we’re using so few features with this example dataset, so don’t be discouraged. The default option also provides a number of other performance metrics that you might be interested in, including area under the precision-recall curve (prAUC).</p>
+<p>The last columns of <code>results$performance</code> are the method and seed (if you set one) to help with combining results from multiple runs (see <code><a href="../articles/parallel.html">vignette("parallel")</a></code>).</p>
 <p><code>feature_importance</code> has information about feature importances if <code>find_feature_importance = TRUE</code> (the default is <code>FALSE</code>). Since we used the defaults, there’s nothing here:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">results</span><span class="op">$</span><span class="va">feature_importance</span>
-<span class="co">#&gt; [1] "Skipped feature importance"</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results</span><span class="op">$</span><span class="va">feature_importance</span>
+<span class="co">#&gt; [1] "Skipped feature importance"</span></code></pre></div>
 </div>
 <div id="customizing-parameters" class="section level1">
 <h1 class="hasAnchor">
@@ -270,32 +260,34 @@
 </h2>
 <ul>
 <li>
-<code>kfold</code>: The number of folds to run for cross-validation (default: 5).</li>
+<code>kfold</code>: The number of folds to run for cross-valdaton (default: 5).</li>
 <li>
-<code>cv_times</code>: The number of times to run repeated cross-validation (default: 100).</li>
+<code>cv_times</code>: The number of times to run repeated cross-valdaton (default: 100).</li>
 <li>
 <code>training_frac</code>: The fraction of data for the training set (default: 0.8). The rest of the data is used for testing.</li>
 </ul>
 <p>Here’s an example where we change some of the default parameters:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">results_custom</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_custom</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
                          <span class="st">'glmnet'</span>,
                          kfold <span class="op">=</span> <span class="fl">2</span>,
                          cv_times <span class="op">=</span> <span class="fl">5</span>,
                          training_frac <span class="op">=</span> <span class="fl">0.5</span>,
                          seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span>
 <span class="co">#&gt; Using 'dx' as the outcome column.</span>
+<span class="co">#&gt; Loading required package: lattice</span>
+<span class="co">#&gt; Loading required package: ggplot2</span>
 <span class="co">#&gt; Warning in (function (w) : `caret::train()` issued the following warning:</span>
 <span class="co">#&gt;  </span>
 <span class="co">#&gt; simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></pre></div>
-<p>You might have noticed that this one ran faster — that’s because we reduced <code>kfold</code> and <code>cv_times</code>. This is okay for testing things out, but in general it’s better to have these numbers be larger <span class="citation">(Topçuoğlu et al. 2020)</span>.</p>
+<span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></code></pre></div>
+<p>You might have noticed that this one ran faster — that’s because we reduced <code>kfold</code> and <code>cv_times</code>. This is okay for testing things out and may even be necessary for smaller datasets. But in general it may be better to have larger numbers for these parameters like the defaults <span class="citation">(Topçuoğlu et al. 2020)</span>.</p>
 </div>
 <div id="changing-the-performance-metric" class="section level2">
 <h2 class="hasAnchor">
 <a href="#changing-the-performance-metric" class="anchor"></a>Changing the performance metric</h2>
-<p>There are two arguments that allow you to change what performance metric to use for model evaluation, a nd what performance metrics to calculate on the test data.</p>
+<p>There are two arguments that allow you to change what performance metric to use for model evaluation, and what performance metrics to calculate on the test data.</p>
 <p><code>perf_metric_function</code> is the function to use to calculate the performance metrics.</p>
 <p>The default for classification is <code><a href="https://rdrr.io/pkg/caret/man/postResample.html">caret::multiClassSummary()</a></code> and the default for regression is <code><a href="https://rdrr.io/pkg/caret/man/postResample.html">caret::defaultSummary()</a></code>. We’d suggest not changing this unless you really know what you’re doing.</p>
 <p><code>perf_metric_name</code> is the column name from the output of <code>perf_metric_function</code> to use as the performance metric. We chose reasonable defaults (AUC for binary, logLoss for multiclass, and RMSE for continuous), but the default functions calculate a bunch of different performance metrics, so you can choose a different one if you’d like.</p>
@@ -308,8 +300,8 @@
 <p>The default performance metrics available for regression are:</p>
 <pre><code>#&gt; [1] "RMSE"     "Rsquared" "MAE"</code></pre>
 <p>Here’s an example using prAUC instead of AUC:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="va">results_pr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>, 
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_pr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>, 
                      <span class="st">'glmnet'</span>, 
                      cv_times <span class="op">=</span> <span class="fl">5</span>, 
                      perf_metric_name <span class="op">=</span> <span class="st">'prAUC'</span>, 
@@ -319,34 +311,34 @@
 <span class="co">#&gt;  </span>
 <span class="co">#&gt; simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></pre></div>
-<p>You’ll see that the cross-validation metric is prAUC, instead of the default AUC:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="va">results_pr</span><span class="op">$</span><span class="va">performance</span>
+<span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></code></pre></div>
+<p>You’ll see that the cross-valdaton metric is prAUC, instead of the default AUC:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_pr</span><span class="op">$</span><span class="va">performance</span>
 <span class="co">#&gt; # A tibble: 1 x 17</span>
 <span class="co">#&gt;   cv_metric_prAUC logLoss   AUC prAUC Accuracy  Kappa    F1 Sensitivity</span>
 <span class="co">#&gt;             &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;</span>
 <span class="co">#&gt; 1           0.577   0.691 0.663 0.605    0.538 0.0539 0.690           1</span>
 <span class="co">#&gt; # … with 9 more variables: Specificity &lt;dbl&gt;, Pos_Pred_Value &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   Neg_Pred_Value &lt;dbl&gt;, Precision &lt;dbl&gt;, Recall &lt;dbl&gt;, Detection_Rate &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   Balanced_Accuracy &lt;dbl&gt;, method &lt;chr&gt;, seed &lt;dbl&gt;</span></pre></div>
+<span class="co">#&gt; #   Balanced_Accuracy &lt;dbl&gt;, method &lt;chr&gt;, seed &lt;dbl&gt;</span></code></pre></div>
 </div>
 <div id="using-groups" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-groups" class="anchor"></a>Using groups</h2>
-<p>The optional <code>groups</code> is a vector of groups to keep together when splitting the data into train and test sets and for cross-validation. This can be a little finnicky depending on how many samples you have and how many groups you have, but sometimes it’s important to split up the data based on group instead of just randomly. This allows you to control for similarities within groups that you don’t want to skew your predictions (i.e. batch effects). For example, with biological data you may have samples collected from multiple hospitals, and you might like to keep observations from the same hospital in the same split.</p>
+<p>The optional <code>groups</code> is a vector of groups to keep together when splitting the data into train and test sets and for cross-validation. This can be a little finicky depending on how many samples and groups you have, but sometimes it’s important to split up the data based on group instead of just randomly. This allows you to control for similarities within groups that you don’t want to skew your predictions (i.e. batch effects). For example, with biological data you may have samples collected from multiple hospitals, and you might like to keep observations from the same hospital in the same split.</p>
 <p>Here’s an example where we split the data into train/test sets based on a group:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="co"># make random groups</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># make random groups</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2019</span><span class="op">)</span>
-<span class="va">grps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>,replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">results_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>, 
+<span class="va">grps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">otu_mini_bin</span><span class="op">)</span>,replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">results_grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>, 
                       <span class="st">'glmnet'</span>, 
                       cv_times <span class="op">=</span> <span class="fl">5</span>, 
                       training_frac <span class="op">=</span> <span class="fl">0.8</span>, 
                       groups <span class="op">=</span> <span class="va">grps</span>, 
-                      seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></pre></div>
-<p>The one difference here is it tells you how much of the data is in the training set. This is because it won’t be exactly what you specify with <code>training_frac</code>, since you have to include all of one group in either the training set <em>or</em> the test set.</p>
+                      seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></code></pre></div>
+<p>The one difference here is <code><a href="../reference/run_ml.html">run_ml()</a></code> will report how much of the data is in the training set if you run the above code chunk. This is because it won’t be exactly what you specify with <code>training_frac</code>, since you have to include all of one group in either the training set <em>or</em> the test set.</p>
 </div>
 </div>
 <div id="finding-feature-importance" class="section level1">
@@ -354,32 +346,27 @@
 <a href="#finding-feature-importance" class="anchor"></a>Finding feature importance</h1>
 <p>To find which features are contributing to predictive power, you can use <code>find_feature_importance = TRUE</code>. How we use permutation importance to determine feature importance is decribed in <span class="citation">(Topçuoğlu et al. 2020)</span>. Briefly, it permutes each of the features individually (or correlated ones together) and evaluates how much the performance metric decreases. The more performance decreases when the feature is randomly shuffled, the more important that feature is. The default is <code>FALSE</code> because it takes a while to run and is only useful if you want to know what features are important in predicting your outcome.</p>
 <p>Let’s look at some feature importance results:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="va">results_imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
-                      <span class="st">'glmnet'</span>,
-                      cv_times <span class="op">=</span> <span class="fl">5</span>,
-                      find_feature_importance <span class="op">=</span> <span class="cn">TRUE</span>,
-                      seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span>
-<span class="co">#&gt; Using 'dx' as the outcome column.</span>
-<span class="co">#&gt; Warning in (function (w) : `caret::train()` issued the following warning:</span>
-<span class="co">#&gt;  </span>
-<span class="co">#&gt; simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
+  <span class="st">"rf"</span>,
+  outcome_colname <span class="op">=</span> <span class="st">"dx"</span>,
+  find_feature_importance <span class="op">=</span> <span class="cn">TRUE</span>,
+  seed <span class="op">=</span> <span class="fl">2019</span>
+<span class="op">)</span></code></pre></div>
 <p>Now, we can check out the feature importances:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="va">results_imp</span><span class="op">$</span><span class="va">feature_importance</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_imp</span><span class="op">$</span><span class="va">feature_importance</span>
 <span class="co">#&gt;    perf_metric perf_metric_diff    names method perf_metric_name seed</span>
-<span class="co">#&gt; 1    0.6473684                0 Otu00009 glmnet              AUC 2019</span>
-<span class="co">#&gt; 2    0.6473684                0 Otu00005 glmnet              AUC 2019</span>
-<span class="co">#&gt; 3    0.6473684                0 Otu00010 glmnet              AUC 2019</span>
-<span class="co">#&gt; 4    0.6473684                0 Otu00001 glmnet              AUC 2019</span>
-<span class="co">#&gt; 5    0.6473684                0 Otu00008 glmnet              AUC 2019</span>
-<span class="co">#&gt; 6    0.6473684                0 Otu00004 glmnet              AUC 2019</span>
-<span class="co">#&gt; 7    0.6473684                0 Otu00003 glmnet              AUC 2019</span>
-<span class="co">#&gt; 8    0.6473684                0 Otu00002 glmnet              AUC 2019</span>
-<span class="co">#&gt; 9    0.6473684                0 Otu00007 glmnet              AUC 2019</span>
-<span class="co">#&gt; 10   0.6473684                0 Otu00006 glmnet              AUC 2019</span></pre></div>
+<span class="co">#&gt; 1    0.5421875        0.0203125 Otu00009     rf              AUC 2019</span>
+<span class="co">#&gt; 2    0.5104625        0.0520375 Otu00005     rf              AUC 2019</span>
+<span class="co">#&gt; 3    0.5014375        0.0610625 Otu00010     rf              AUC 2019</span>
+<span class="co">#&gt; 4    0.5508000        0.0117000 Otu00001     rf              AUC 2019</span>
+<span class="co">#&gt; 5    0.5275125        0.0349875 Otu00008     rf              AUC 2019</span>
+<span class="co">#&gt; 6    0.6441750       -0.0816750 Otu00004     rf              AUC 2019</span>
+<span class="co">#&gt; 7    0.5527750        0.0097250 Otu00003     rf              AUC 2019</span>
+<span class="co">#&gt; 8    0.5695750       -0.0070750 Otu00002     rf              AUC 2019</span>
+<span class="co">#&gt; 9    0.5435875        0.0189125 Otu00007     rf              AUC 2019</span>
+<span class="co">#&gt; 10   0.5487625        0.0137375 Otu00006     rf              AUC 2019</span></code></pre></div>
 <p>There are several columns:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -395,10 +382,10 @@
 <li>
 <code>seed</code>: The seed (if set).</li>
 </ol>
-<p>As you can see here, the differences are negligible here (close to zero), which makes sense since our model isn’t great. If you’re interested in feature importance, it’s especially uesful to run multiple different train/test splits, as described here [<strong>Link to snakemake workflow</strong>].</p>
+<p>As you can see here, the differences are negligible here (close to zero), which makes sense since our model isn’t great. If you’re interested in feature importance, it’s especially useful to run multiple different train/test splits, as shown in our <a href="https://github.com/SchlossLab/mikropml-snakemake-workflow/">example snakemake workflow</a>.</p>
 <p>You can also choose to permute correlated features together using <code>corr_thresh</code> (default: 1). Any features that are above the correlation threshold are permuted together; i.e. perfectly correlated features are permuted together when using the default value.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="va">results_imp_corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_imp_corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
                            <span class="st">'glmnet'</span>,
                            cv_times <span class="op">=</span> <span class="fl">5</span>,
                            find_feature_importance <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -412,9 +399,9 @@
 <span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span>
 <span class="va">results_imp_corr</span><span class="op">$</span><span class="va">feature_importance</span>
 <span class="co">#&gt;   perf_metric perf_metric_diff</span>
-<span class="co">#&gt; 1   0.6473684            0.000</span>
-<span class="co">#&gt; 2   0.6473684            0.000</span>
-<span class="co">#&gt; 3   0.5663684            0.081</span>
+<span class="co">#&gt; 1   0.5992368       0.04813158</span>
+<span class="co">#&gt; 2   0.6369474       0.01042105</span>
+<span class="co">#&gt; 3   0.5431579       0.10421053</span>
 <span class="co">#&gt;                                                                     names</span>
 <span class="co">#&gt; 1                                                                Otu00008</span>
 <span class="co">#&gt; 2                                                                Otu00004</span>
@@ -422,7 +409,7 @@
 <span class="co">#&gt;   method perf_metric_name seed</span>
 <span class="co">#&gt; 1 glmnet              AUC 2019</span>
 <span class="co">#&gt; 2 glmnet              AUC 2019</span>
-<span class="co">#&gt; 3 glmnet              AUC 2019</span></pre></div>
+<span class="co">#&gt; 3 glmnet              AUC 2019</span></code></pre></div>
 <p>You can see what features were permuted together in the <code>names</code> column. Here all 3 features were permuted together (which doesn’t really make sense, but it’s just an example).</p>
 </div>
 <div id="tuning-hyperparameters-using-the-hyperparameter-argument" class="section level1">
@@ -437,37 +424,37 @@
 <div id="random-forest" class="section level2">
 <h2 class="hasAnchor">
 <a href="#random-forest" class="anchor"></a>Random forest</h2>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="va">results_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
                      <span class="st">'rf'</span>,
                      cv_times <span class="op">=</span> <span class="fl">5</span>,
-                     seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></pre></div>
+                     seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></code></pre></div>
 <p>You can also change the number of trees to use for random forest (<code>ntree</code>; default: 1000). This can’t be tuned using <code>rf</code> package implementation of random forest. Please refer to <code>caret</code> documentation if you are interested in other packages with random forest implementations.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="va">results_rf_nt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_rf_nt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
                         <span class="st">'rf'</span>,
                         cv_times <span class="op">=</span> <span class="fl">5</span>,
                         ntree <span class="op">=</span> <span class="fl">10</span>,
-                        seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></pre></div>
+                        seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="decision-tree" class="section level2">
 <h2 class="hasAnchor">
 <a href="#decision-tree" class="anchor"></a>Decision tree</h2>
-<div class="sourceCode" id="cb20"><pre class="downlit">
-<span class="va">results_dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_dt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
                      <span class="st">'rpart2'</span>,
                      cv_times <span class="op">=</span> <span class="fl">5</span>,
-                     seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></pre></div>
+                     seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="svm" class="section level2">
 <h2 class="hasAnchor">
 <a href="#svm" class="anchor"></a>SVM</h2>
-<div class="sourceCode" id="cb21"><pre class="downlit">
-<span class="va">results_svm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_svm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span>,
                       <span class="st">'svmRadial'</span>,
                       cv_times <span class="op">=</span> <span class="fl">5</span>,
-                      seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></pre></div>
-<p>For more information on the message “maximum number of iterations reached”, see <a href="https://github.com/topepo/caret/issues/425">this</a> post.</p>
+                      seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></code></pre></div>
+<p>If you get a message “maximum number of iterations reached”, see <a href="https://github.com/topepo/caret/issues/425">this issue</a> in caret.</p>
 </div>
 </div>
 <div id="other-data" class="section level1">
@@ -476,49 +463,44 @@
 <div id="multiclass-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#multiclass-data" class="anchor"></a>Multiclass data</h2>
+<p>We provide <code>otu_mini_multi</code> with a multiclass outcome:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">otu_mini_multi</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="st">'dx'</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] "adenoma"   "carcinoma" "normal"</span></code></pre></div>
 <p>Here’s an example of running multiclass data:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit">
-<span class="va">results_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_multi</span>,
-                        <span class="st">'glmnet'</span>,
-                        cv_times <span class="op">=</span> <span class="fl">5</span>,
-                        seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span>
-<span class="co">#&gt; Using 'dx' as the outcome column.</span>
-<span class="co">#&gt; Warning in (function (w) : `caret::train()` issued the following warning:</span>
-<span class="co">#&gt;  </span>
-<span class="co">#&gt; simpleWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo, : There were missing values in resampled performance measures.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; This warning usually means that the model didn't converge in some cross-validation folds because it is predicting something close to a constant. As a result, certain performance metrics can't be calculated. This suggests that some of the hyperparameters chosen are doing very poorly.</span></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_multi</span>,
+                        outcome_colname <span class="op">=</span> <span class="st">"dx"</span>,
+                        seed <span class="op">=</span> <span class="fl">2019</span>
+<span class="op">)</span></code></pre></div>
 <p>The performance metrics are slightly different, but the format of everything else is the same:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit">
-<span class="va">results_multi</span><span class="op">$</span><span class="va">performance</span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_multi</span><span class="op">$</span><span class="va">performance</span>
 <span class="co">#&gt; # A tibble: 1 x 17</span>
-<span class="co">#&gt;   cv_metric_logLo… logLoss   AUC prAUC Accuracy Kappa Mean_F1 Mean_Sensitivity</span>
-<span class="co">#&gt;              &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;</span>
-<span class="co">#&gt; 1             1.08    1.08 0.545 0.364    0.402     0 &lt;NA&gt;               0.333</span>
+<span class="co">#&gt;   cv_metric_logLo… logLoss   AUC prAUC Accuracy  Kappa Mean_F1 Mean_Sensitivity</span>
+<span class="co">#&gt;              &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;</span>
+<span class="co">#&gt; 1             1.07    1.11 0.506 0.353    0.382 0.0449 &lt;NA&gt;               0.360</span>
 <span class="co">#&gt; # … with 9 more variables: Mean_Specificity &lt;dbl&gt;, Mean_Pos_Pred_Value &lt;chr&gt;,</span>
-<span class="co">#&gt; #   Mean_Neg_Pred_Value &lt;chr&gt;, Mean_Precision &lt;chr&gt;, Mean_Recall &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   Mean_Neg_Pred_Value &lt;dbl&gt;, Mean_Precision &lt;chr&gt;, Mean_Recall &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   Mean_Detection_Rate &lt;dbl&gt;, Mean_Balanced_Accuracy &lt;dbl&gt;, method &lt;chr&gt;,</span>
-<span class="co">#&gt; #   seed &lt;dbl&gt;</span></pre></div>
+<span class="co">#&gt; #   seed &lt;dbl&gt;</span></code></pre></div>
 </div>
 <div id="continuous-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#continuous-data" class="anchor"></a>Continuous data</h2>
-<p>And here’s an example for running continuous data:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit">
-<span class="va">results_cont</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">dat</span>,
+<p>And here’s an example for running continuous data, where the outcome column is numerical:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_cont</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_ml.html">run_ml</a></span><span class="op">(</span><span class="va">otu_mini_bin</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">11</span><span class="op">]</span>,
                        <span class="st">'glmnet'</span>,
                        outcome_colname <span class="op">=</span> <span class="st">'Otu00001'</span>,
-                       cv_times <span class="op">=</span> <span class="fl">5</span>,
-                       seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span>
-<span class="co">#&gt; Using 'Otu00001' as the outcome column.</span></pre></div>
-<p>You can ignore the warning, because we want it to be continuous data.</p>
+                       seed <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></code></pre></div>
 <p>Again, the performance metrics are slightly different, but the format of the rest is the same:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="va">results_cont</span><span class="op">$</span><span class="va">performance</span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">results_cont</span><span class="op">$</span><span class="va">performance</span>
 <span class="co">#&gt; # A tibble: 1 x 6</span>
 <span class="co">#&gt;   cv_metric_RMSE  RMSE Rsquared   MAE method  seed</span>
 <span class="co">#&gt;            &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1          0.878  1.01   0.0985 0.704 glmnet  2019</span></pre></div>
+<span class="co">#&gt; 1           622.  731.   0.0893  472. glmnet  2019</span></code></pre></div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
